@@ -8,7 +8,7 @@ services:
       - "5202:80"
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ConnectionStrings__DefaultConnection=Host=postgres;Database=usersdb;Username=postgres;Password=postgres
+      - ConnectionStrings__DefaultConnection=Host=postgres;Database=ecommercedb;Username=postgres;Password=postgres
     depends_on:
       - postgres
     networks:
@@ -21,6 +21,7 @@ services:
       - "5176:80"
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Host=postgres;Database=ecommercedb;Username=postgres;Password=postgres
     networks:
       - backend
   
@@ -70,7 +71,7 @@ services:
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: usersdb
+      POSTGRES_DB: ecommercedb
     ports:
       - "5432:5432"
     volumes:
