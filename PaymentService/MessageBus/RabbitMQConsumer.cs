@@ -1,0 +1,49 @@
+﻿using System.Text;
+using RabbitMQ.Client;
+using RabbitMQ.Client.Events;
+
+namespace PaymentService.MessageBus;
+
+public class RabbitMQConsumer
+{
+    private readonly IConfiguration _config;
+    private IConnection _connection;
+    private IChannel _channel;
+
+    public RabbitMQConsumer(IConfiguration config)
+    {
+        _config = config;
+    }
+
+    private async Task InitRabbitMQ(ConnectionFactory factory)
+    {
+        _connection = await factory.CreateConnectionAsync();
+        _channel = await _connection.CreateChannelAsync();
+    }
+
+    public async Task StartConsumer()
+    {
+        ConnectionFactory factory = new ConnectionFactory()
+                                    {
+                                        HostName = _config["RabbitMQ:Host"],
+                                        UserName = _config["RabbitMQ:User"],
+                                        Password = _config["RabbitMQ:Password"],
+                                        Port = int.Parse(_config["RabbitMQ:Port"]),
+                                    };
+        await InitRabbitMQ(factory);
+        await _channel.ExchangeDeclareAsync("orders", ExchangeType.Fanout);
+        var queueName = (await _channel.QueueDeclareAsync()).QueueName;
+        await _channel.QueueBindAsync(queueName, "orders", "");
+
+        var consumer = new AsyncEventingBasicConsumer(_channel);
+        consumer.ReceivedAsync += async (model, ea) =>
+                                  {
+                                      await Task.Yield();
+                                      var body = ea.Body.ToArray();
+                                      var message = Encoding.UTF8.GetString(body);
+                                      Console.WriteLine($" [x] Received {message}");
+                                  };
+
+        await _channel.BasicConsumeAsync(queueName, true, consumer);
+    }
+}
