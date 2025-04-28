@@ -94,6 +94,9 @@ services:
     ports:
       - "5672:5672" # Main RabbitMQ connection
       - "15672:15672" # RabbitMQ management dashboard
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
     networks:
       - backend
   
