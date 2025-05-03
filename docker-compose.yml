@@ -3,7 +3,9 @@ version: '3.8'
 services:
   # USER SERVICE
   userservice:
-    build: ./UserService
+    build: 
+      context: .
+      dockerfile: UserService/Dockerfile
     ports:
       - "5202:80"
     environment:
@@ -16,7 +18,9 @@ services:
   
   # PRODUCT SERVICE
   productservice:
-    build: ./ProductService
+    build: 
+      context: .
+      dockerfile: ProductService/Dockerfile
     ports:
       - "5176:80"
     environment:
@@ -27,7 +31,9 @@ services:
   
   # CART SERVICE
   cartservice:
-    build: ./CartService
+    build: 
+      context: .
+      dockerfile: CartService/Dockerfile
     ports:
       - "5259:80"
     environment:
@@ -41,7 +47,9 @@ services:
   
   # ORDER SERVICE
   orderservice:
-    build: ./OrderService
+    build: 
+      context: .
+      dockerfile: OrderService/Dockerfile
     ports:
       - "5199:80"
     environment:
@@ -54,7 +62,9 @@ services:
   
   # PAYMENT SERVICE
   paymentservice:
-    build: ./PaymentService
+    build: 
+      context: .
+      dockerfile: PaymentService/Dockerfile
     ports:
       - "5208:80"
     environment:
