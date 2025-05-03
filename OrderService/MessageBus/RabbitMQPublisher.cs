@@ -32,6 +32,10 @@ public class RabbitMQPublisher
     {
         await _channel.ExchangeDeclareAsync("orders", ExchangeType.Fanout);
         var body = Encoding.UTF8.GetBytes(message);
-        await _channel.BasicPublishAsync("orders", "", true, body);
+        var properties = new BasicProperties()
+                         {
+                             Persistent = true,
+                         };
+        await _channel.BasicPublishAsync("orders", "", true, properties, body);
     }
 }

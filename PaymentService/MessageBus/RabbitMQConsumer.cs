@@ -1,6 +1,8 @@
 ﻿using System.Text;
+using System.Text.Json;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
+using Shared.Messaging;
 
 namespace PaymentService.MessageBus;
 
@@ -41,7 +43,9 @@ public class RabbitMQConsumer
                                       await Task.Yield();
                                       var body = ea.Body.ToArray();
                                       var message = Encoding.UTF8.GetString(body);
-                                      Console.WriteLine($" [x] Received {message}");
+                                      var obj = JsonSerializer.Deserialize<OrderCreatedEvent>(message)!;
+                                      Console.WriteLine($" [x] Received {obj.GetType().Name} with values: \n" +
+                                                        $"OrderId: {obj.OrderId}\t Amount: {obj.Amount}\t UserId: {obj.UserId}");
                                   };
 
         await _channel.BasicConsumeAsync(queueName, true, consumer);
