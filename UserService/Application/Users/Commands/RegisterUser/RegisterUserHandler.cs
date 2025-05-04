@@ -1,18 +1,14 @@
-﻿using System.Data;
-using UserService.Domain.Entities;
+﻿using UserService.Domain.Entities;
 using UserService.Domain.Interfaces;
 using Shared.Data;
+using UserService.Application.Interfaces;
 
 namespace UserService.Application.Users.Commands.RegisterUser;
 
-public class RegisterUserHandler
+public class RegisterUserHandler(IUserRepository userRepository, IPasswordHasher passwordHasher)
 {
-    private readonly IUserRepository _userRepository;
-    
-    public RegisterUserHandler(IUserRepository userRepository)
-    {
-        _userRepository = userRepository;
-    }
+    private readonly IUserRepository _userRepository = userRepository;
+    private readonly IPasswordHasher _passwordHasher = passwordHasher;
 
     public async Task<Result<Guid>> Handle(RegisterUserCommand command)
     {
@@ -26,7 +22,7 @@ public class RegisterUserHandler
                       {
                           Email = command.Email,
                           FullName = command.FullName,
-                          HashedPassword = command.Password, // TODO: Hash the password
+                          HashedPassword = await _passwordHasher.HashPassword(command.Password),
                           CreatedAt = DateTime.UtcNow,
                       };
         await _userRepository.AddAsync(newUser);
