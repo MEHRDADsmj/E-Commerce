@@ -1,6 +1,7 @@
 ﻿using System.Data;
 using UserService.Domain.Entities;
 using UserService.Domain.Interfaces;
+using Shared.Data;
 
 namespace UserService.Application.Users.Commands.RegisterUser;
 
@@ -13,12 +14,12 @@ public class RegisterUserHandler
         _userRepository = userRepository;
     }
 
-    public async Task<Guid> Handle(RegisterUserCommand command)
+    public async Task<Result<Guid>> Handle(RegisterUserCommand command)
     {
         var user = await _userRepository.GetByEmailAsync(command.Email);
         if (user != null)
         {
-            throw new DuplicateNameException("User already exists");
+            return Result<Guid>.Failure("User already exists");
         }
 
         var newUser = new User()
@@ -29,6 +30,6 @@ public class RegisterUserHandler
                           CreatedAt = DateTime.UtcNow,
                       };
         await _userRepository.AddAsync(newUser);
-        return newUser.Id;
+        return Result<Guid>.Success(newUser.Id);
     }
 }
