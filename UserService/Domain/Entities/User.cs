@@ -8,5 +8,5 @@ public class User
     [Required] public string Email { get; set; }
     [Required] public string HashedPassword { get; set; }
     [Required] public string FullName { get; set; }
-    DateTime CreatedAt { get; set; }
+    public DateTime CreatedAt { get; set; }
 }
