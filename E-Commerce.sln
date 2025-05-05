@@ -12,6 +12,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PaymentService", "PaymentSe
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared", "Shared\Shared.csproj", "{C2D926B7-060B-4045-9E4D-F60B6FA3E7FB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{7156909C-41C0-44F2-91EB-8EF51BB1345A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -42,5 +44,9 @@ Global
 		{C2D926B7-060B-4045-9E4D-F60B6FA3E7FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C2D926B7-060B-4045-9E4D-F60B6FA3E7FB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C2D926B7-060B-4045-9E4D-F60B6FA3E7FB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7156909C-41C0-44F2-91EB-8EF51BB1345A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7156909C-41C0-44F2-91EB-8EF51BB1345A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7156909C-41C0-44F2-91EB-8EF51BB1345A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7156909C-41C0-44F2-91EB-8EF51BB1345A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
