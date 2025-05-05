@@ -5,10 +5,16 @@ using UserService.Application.Interfaces;
 
 namespace UserService.Application.Users.Commands.RegisterUser;
 
-public class RegisterUserHandler(IUserRepository userRepository, IPasswordHasher passwordHasher)
+public class RegisterUserHandler
 {
-    private readonly IUserRepository _userRepository = userRepository;
-    private readonly IPasswordHasher _passwordHasher = passwordHasher;
+    private readonly IUserRepository _userRepository;
+    private readonly IPasswordHasher _passwordHasher;
+
+    public RegisterUserHandler(IUserRepository userRepository, IPasswordHasher passwordHasher)
+    {
+        _userRepository = userRepository;
+        _passwordHasher = passwordHasher;
+    }
 
     public async Task<Result<Guid>> Handle(RegisterUserCommand command)
     {
