@@ -30,7 +30,7 @@ public class LoginUserHandler
             return Result<LoginUserResult>.Failure("Invalid username or password");
         }
 
-        var result = new LoginUserResult(user.Id, user.Email, "ABC123"); // TODO: Replace with real token
+        var result = new LoginUserResult(user.Id, user.Email, await _tokenGenerator.GenerateToken());
         return Result<LoginUserResult>.Success(result);
     }
 }

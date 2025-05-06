@@ -36,7 +36,7 @@ public class RegisterUserHandlerTests
     }
 
     [Fact]
-    public async Task Handle_ShouldRegisterUser_WhenEmailIsNotUnique()
+    public async Task Handle_ShouldNotRegisterUser_WhenEmailIsNotUnique()
     {
         var command = new RegisterUserCommand("test@test.com", "password", "John Doe");
         _userRepositoryMock
