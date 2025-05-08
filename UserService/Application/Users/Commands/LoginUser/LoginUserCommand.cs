@@ -1,3 +1,6 @@
-﻿namespace UserService.Application.Users.Commands.LoginUser;
+﻿using MediatR;
+using Shared.Data;
 
-public record LoginUserCommand(string Email, string Password);
+namespace UserService.Application.Users.Commands.LoginUser;
+
+public record LoginUserCommand(string Email, string Password) : IRequest<Result<LoginUserResult>>;

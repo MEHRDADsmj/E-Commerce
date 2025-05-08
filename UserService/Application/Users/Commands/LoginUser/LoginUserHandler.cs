@@ -1,10 +1,11 @@
-﻿using Shared.Data;
+﻿using MediatR;
+using Shared.Data;
 using UserService.Application.Interfaces;
 using UserService.Domain.Interfaces;
 
 namespace UserService.Application.Users.Commands.LoginUser;
 
-public class LoginUserHandler
+public class LoginUserHandler : IRequestHandler<LoginUserCommand, Result<LoginUserResult>>
 {
     private readonly IUserRepository _userRepository;
     private readonly IPasswordHasher _passwordHasher;
@@ -20,7 +21,7 @@ public class LoginUserHandler
         _configuration = configuration;
     }
 
-    public async Task<Result<LoginUserResult>> Handle(LoginUserCommand command)
+    public async Task<Result<LoginUserResult>> Handle(LoginUserCommand command, CancellationToken cancellationToken)
     {
         var user = await _userRepository.GetByEmailAsync(command.Email);
         if (user == null)

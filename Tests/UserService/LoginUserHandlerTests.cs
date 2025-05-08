@@ -43,7 +43,7 @@ public class LoginUserHandlerTests
             .Setup(configuration => configuration["JWT:Key"])
             .Returns("JWT");
         
-        var result = await _handler.Handle(command);
+        var result = await _handler.Handle(command, new CancellationToken());
         
         result.IsSuccess.Should().BeTrue();
         _userRepository.Verify(repo => repo.GetByEmailAsync(It.IsAny<string>()), Times.Once);
@@ -68,7 +68,7 @@ public class LoginUserHandlerTests
             .Setup(configuration => configuration["JWT:Key"])
             .Returns("JWT");
         
-        var result = await _handler.Handle(command);
+        var result = await _handler.Handle(command, new CancellationToken());
         
         result.IsSuccess.Should().BeFalse();
         _userRepository.Verify(repo => repo.GetByEmailAsync(It.IsAny<string>()), Times.Once);
@@ -93,7 +93,7 @@ public class LoginUserHandlerTests
             .Setup(configuration => configuration["JWT:Key"])
             .Returns("JWT");
         
-        var result = await _handler.Handle(command);
+        var result = await _handler.Handle(command, new CancellationToken());
         
         result.IsSuccess.Should().BeFalse();
         _userRepository.Verify(repo => repo.GetByEmailAsync(It.IsAny<string>()), Times.Once);
