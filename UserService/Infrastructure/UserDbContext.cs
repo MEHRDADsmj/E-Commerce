@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using UserService.Domain.Entities;
 
 namespace UserService.Data;
 
@@ -8,4 +9,6 @@ public class UserDbContext : DbContext
     {
         
     }
+    
+    public DbSet<User> Users { get; set; }
 }
