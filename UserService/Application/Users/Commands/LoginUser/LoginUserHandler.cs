@@ -9,12 +9,15 @@ public class LoginUserHandler
     private readonly IUserRepository _userRepository;
     private readonly IPasswordHasher _passwordHasher;
     private readonly ITokenGenerator _tokenGenerator;
+    private readonly IConfiguration _configuration;
     
-    public LoginUserHandler(IUserRepository userRepository, IPasswordHasher passwordHasher, ITokenGenerator tokenGenerator)
+    public LoginUserHandler(IUserRepository userRepository, IPasswordHasher passwordHasher, ITokenGenerator tokenGenerator,
+        IConfiguration configuration)
     {
         _userRepository = userRepository;
         _passwordHasher = passwordHasher;
         _tokenGenerator = tokenGenerator;
+        _configuration = configuration;
     }
 
     public async Task<Result<LoginUserResult>> Handle(LoginUserCommand command)
@@ -30,7 +33,7 @@ public class LoginUserHandler
             return Result<LoginUserResult>.Failure("Invalid username or password");
         }
 
-        var result = new LoginUserResult(user.Id, user.Email, await _tokenGenerator.GenerateToken());
+        var result = new LoginUserResult(user.Id, user.Email, await _tokenGenerator.GenerateToken(_configuration["Jwt:Key"]));
         return Result<LoginUserResult>.Success(result);
     }
 }

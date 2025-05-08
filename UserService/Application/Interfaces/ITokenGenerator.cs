@@ -2,5 +2,6 @@
 
 public interface ITokenGenerator
 {
-    Task<string> GenerateToken();
+    Task<string> GenerateToken(string key);
+    Task<bool> ValidateToken(string token, string key);
 }

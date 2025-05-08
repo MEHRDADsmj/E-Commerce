@@ -1,4 +1,5 @@
 ﻿using FluentAssertions;
+using Microsoft.Extensions.Configuration;
 using Moq;
 using UserService.Application.Interfaces;
 using UserService.Application.Users.Commands.LoginUser;
@@ -12,6 +13,7 @@ public class LoginUserHandlerTests
     private readonly Mock<IUserRepository> _userRepository;
     private readonly Mock<IPasswordHasher> _passwordHasher;
     private readonly Mock<ITokenGenerator> _tokenGenerator;
+    private readonly Mock<IConfiguration> _configuration;
     private readonly LoginUserHandler _handler;
     
     public LoginUserHandlerTests()
@@ -19,7 +21,9 @@ public class LoginUserHandlerTests
         _userRepository = new Mock<IUserRepository>();
         _passwordHasher = new Mock<IPasswordHasher>();
         _tokenGenerator = new Mock<ITokenGenerator>();
-        _handler = new LoginUserHandler(_userRepository.Object, _passwordHasher.Object, _tokenGenerator.Object);
+        _configuration = new Mock<IConfiguration>();
+        _handler = new LoginUserHandler(_userRepository.Object, _passwordHasher.Object, _tokenGenerator.Object,
+            _configuration.Object);
     }
 
     [Fact]
@@ -33,15 +37,18 @@ public class LoginUserHandlerTests
             .Setup(hasher => hasher.HashPassword(command.Password))
             .ReturnsAsync("123");
         _tokenGenerator
-            .Setup(gen => gen.GenerateToken())
+            .Setup(gen => gen.GenerateToken(It.IsAny<string>()))
             .ReturnsAsync("!@#");
+        _configuration
+            .Setup(configuration => configuration["JWT:Key"])
+            .Returns("JWT");
         
         var result = await _handler.Handle(command);
         
         result.IsSuccess.Should().BeTrue();
         _userRepository.Verify(repo => repo.GetByEmailAsync(It.IsAny<string>()), Times.Once);
         _passwordHasher.Verify(hasher => hasher.HashPassword(It.IsAny<string>()), Times.Once);
-        _tokenGenerator.Verify(gen => gen.GenerateToken(), Times.Once);
+        _tokenGenerator.Verify(gen => gen.GenerateToken(It.IsAny<string>()), Times.Once);
     }
 
     [Fact]
@@ -55,15 +62,18 @@ public class LoginUserHandlerTests
             .Setup(hasher => hasher.HashPassword(command.Password))
             .ReturnsAsync("1");
         _tokenGenerator
-            .Setup(gen => gen.GenerateToken())
+            .Setup(gen => gen.GenerateToken(It.IsAny<string>()))
             .ReturnsAsync("!@#");
+        _configuration
+            .Setup(configuration => configuration["JWT:Key"])
+            .Returns("JWT");
         
         var result = await _handler.Handle(command);
         
         result.IsSuccess.Should().BeFalse();
         _userRepository.Verify(repo => repo.GetByEmailAsync(It.IsAny<string>()), Times.Once);
         _passwordHasher.Verify(hasher => hasher.HashPassword(It.IsAny<string>()), Times.Once);
-        _tokenGenerator.Verify(gen => gen.GenerateToken(), Times.Never);
+        _tokenGenerator.Verify(gen => gen.GenerateToken(It.IsAny<string>()), Times.Never);
     }
 
     [Fact]
@@ -77,14 +87,17 @@ public class LoginUserHandlerTests
             .Setup(hasher => hasher.HashPassword(command.Password))
             .ReturnsAsync("123");
         _tokenGenerator
-            .Setup(gen => gen.GenerateToken())
+            .Setup(gen => gen.GenerateToken(It.IsAny<string>()))
             .ReturnsAsync("!@#");
+        _configuration
+            .Setup(configuration => configuration["JWT:Key"])
+            .Returns("JWT");
         
         var result = await _handler.Handle(command);
         
         result.IsSuccess.Should().BeFalse();
         _userRepository.Verify(repo => repo.GetByEmailAsync(It.IsAny<string>()), Times.Once);
         _passwordHasher.Verify(hasher => hasher.HashPassword(It.IsAny<string>()), Times.Never);
-        _tokenGenerator.Verify(gen => gen.GenerateToken(), Times.Never);
+        _tokenGenerator.Verify(gen => gen.GenerateToken(It.IsAny<string>()), Times.Never);
     }
 }
