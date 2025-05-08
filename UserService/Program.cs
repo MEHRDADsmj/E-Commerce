@@ -1,3 +1,4 @@
+using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 using UserService.Application.Interfaces;
 using UserService.Data;
@@ -13,6 +14,10 @@ builder.Services.AddDbContext<UserDbContext>(options =>
                                              {
                                                  options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
                                              });
+builder.Services.AddMediatR(config =>
+                            {
+                                config.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());
+                            });
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddSingleton<ITokenGenerator, JwtTokenGenerator>();
 builder.Services.AddSingleton<IPasswordHasher, BCryptPasswordHasher>();
