@@ -1,5 +1,9 @@
 using Microsoft.EntityFrameworkCore;
+using UserService.Application.Interfaces;
 using UserService.Data;
+using UserService.Domain.Interfaces;
+using UserService.Infrastructure;
+using UserService.Infrastructure.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,6 +13,9 @@ builder.Services.AddDbContext<UserDbContext>(options =>
                                              {
                                                  options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
                                              });
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddSingleton<ITokenGenerator, JwtTokenGenerator>();
+builder.Services.AddSingleton<IPasswordHasher, BCryptPasswordHasher>();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
