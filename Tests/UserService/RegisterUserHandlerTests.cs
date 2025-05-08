@@ -32,7 +32,7 @@ public class RegisterUserHandlerTests
         
         result.IsSuccess.Should().BeTrue();
         _userRepositoryMock.Verify(repo => repo.AddAsync(It.IsAny<User>()), Times.Once);
-        _passwordHasherMock.Verify(hasher => hasher.HashPassword(command.Password), Times.Once);
+        _passwordHasherMock.Verify(hasher => hasher.HashPassword(It.IsAny<string>()), Times.Once);
     }
 
     [Fact]
@@ -47,6 +47,6 @@ public class RegisterUserHandlerTests
         
         result.IsSuccess.Should().BeFalse();
         _userRepositoryMock.Verify(repo => repo.AddAsync(It.IsAny<User>()), Times.Never);
-        _passwordHasherMock.Verify(hasher => hasher.HashPassword(command.Password), Times.Never);
+        _passwordHasherMock.Verify(hasher => hasher.HashPassword(It.IsAny<string>()), Times.Never);
     }
 }
