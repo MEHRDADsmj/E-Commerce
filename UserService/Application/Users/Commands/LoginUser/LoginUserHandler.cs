@@ -28,8 +28,8 @@ public class LoginUserHandler : IRequestHandler<LoginUserCommand, Result<LoginUs
         {
             return Result<LoginUserResult>.Failure("Invalid username or password");
         }
-        var passwordHash = await _passwordHasher.HashPassword(command.Password);
-        if (!string.Equals(passwordHash, user.HashedPassword))
+        
+        if (!(await _passwordHasher.VerifyHash(user.HashedPassword, command.Password)))
         {
             return Result<LoginUserResult>.Failure("Invalid username or password");
         }
