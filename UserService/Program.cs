@@ -1,5 +1,8 @@
 using System.Reflection;
+using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using UserService.Application.Interfaces;
 using UserService.Data;
 using UserService.Domain.Interfaces;
@@ -23,6 +26,21 @@ builder.Services.AddSingleton<ITokenGenerator, JwtTokenGenerator>();
 builder.Services.AddSingleton<IPasswordHasher, BCryptPasswordHasher>();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters()
+                                        {
+                                            ValidateLifetime = true,
+                                            ValidateAudience = false,
+                                            ValidateIssuer = true,
+                                            ValidIssuer = "Mehrdad",
+                                            ValidateIssuerSigningKey = true,
+                                            IssuerSigningKey =
+                                                new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Key"])),
+                                            ClockSkew = TimeSpan.Zero,
+                                        };
+});
+builder.Services.AddAuthorization();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
@@ -40,6 +58,8 @@ using (var serviceScope = app.Services.CreateScope())
     context.Database.Migrate();
 }
 
+app.UseAuthentication();
+app.UseAuthorization();
 app.UseHttpsRedirection();
 app.MapControllers();
 app.Run();
