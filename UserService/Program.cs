@@ -34,6 +34,12 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+using (var serviceScope = app.Services.CreateScope())
+{
+    var context = serviceScope.ServiceProvider.GetRequiredService<UserDbContext>();
+    context.Database.Migrate();
+}
+
 app.UseHttpsRedirection();
 app.MapControllers();
 app.Run();
