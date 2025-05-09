@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using MediatR;
+using Microsoft.AspNetCore.Mvc;
+using UserService.Application.Users.Commands.LoginUser;
+using UserService.Application.Users.Commands.RegisterUser;
 
 namespace UserService.Controllers;
 
@@ -6,9 +9,11 @@ namespace UserService.Controllers;
 [ApiController]
 public class UsersController : ControllerBase
 {
-    public UsersController()
+    private readonly IMediator _mediator;
+    
+    public UsersController(IMediator mediator)
     {
-        
+        _mediator = mediator;
     }
 
     [HttpGet("health")]
