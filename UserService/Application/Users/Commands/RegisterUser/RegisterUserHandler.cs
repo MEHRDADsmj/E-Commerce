@@ -1,11 +1,12 @@
-﻿using UserService.Domain.Entities;
+﻿using MediatR;
+using UserService.Domain.Entities;
 using UserService.Domain.Interfaces;
 using Shared.Data;
 using UserService.Application.Interfaces;
 
 namespace UserService.Application.Users.Commands.RegisterUser;
 
-public class RegisterUserHandler
+public class RegisterUserHandler : IRequestHandler<RegisterUserCommand, Result<Guid>>
 {
     private readonly IUserRepository _userRepository;
     private readonly IPasswordHasher _passwordHasher;
@@ -16,7 +17,7 @@ public class RegisterUserHandler
         _passwordHasher = passwordHasher;
     }
 
-    public async Task<Result<Guid>> Handle(RegisterUserCommand command)
+    public async Task<Result<Guid>> Handle(RegisterUserCommand command, CancellationToken cancellationToken)
     {
         var user = await _userRepository.GetByEmailAsync(command.Email);
         if (user != null)

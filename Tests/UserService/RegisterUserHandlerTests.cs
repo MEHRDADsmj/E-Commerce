@@ -28,7 +28,7 @@ public class RegisterUserHandlerTests
             .Setup(repo => repo.GetByEmailAsync(command.Email))
             .ReturnsAsync(null as User);
         
-        var result = await _handler.Handle(command);
+        var result = await _handler.Handle(command, new CancellationToken());
         
         result.IsSuccess.Should().BeTrue();
         _userRepositoryMock.Verify(repo => repo.AddAsync(It.IsAny<User>()), Times.Once);
@@ -43,7 +43,7 @@ public class RegisterUserHandlerTests
             .Setup(repo => repo.GetByEmailAsync(command.Email))
             .ReturnsAsync(new User());
         
-        var result = await _handler.Handle(command);
+        var result = await _handler.Handle(command, new CancellationToken());
         
         result.IsSuccess.Should().BeFalse();
         _userRepositoryMock.Verify(repo => repo.AddAsync(It.IsAny<User>()), Times.Never);

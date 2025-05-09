@@ -1,3 +1,6 @@
-﻿namespace UserService.Application.Users.Commands.RegisterUser;
+﻿using MediatR;
+using Shared.Data;
 
-public record RegisterUserCommand(string Email, string Password, string FullName);
+namespace UserService.Application.Users.Commands.RegisterUser;
+
+public record RegisterUserCommand(string Email, string Password, string FullName) : IRequest<Result<Guid>>;
