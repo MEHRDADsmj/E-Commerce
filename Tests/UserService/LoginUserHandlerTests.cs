@@ -34,8 +34,8 @@ public class LoginUserHandlerTests
             .Setup(repo => repo.GetByEmailAsync(command.Email))
             .ReturnsAsync(new User() { HashedPassword = "123", Email = command.Email });
         _passwordHasher
-            .Setup(hasher => hasher.HashPassword(command.Password))
-            .ReturnsAsync("123");
+            .Setup(hasher => hasher.VerifyHash("123", command.Password))
+            .ReturnsAsync(true);
         _tokenGenerator
             .Setup(gen => gen.GenerateToken(It.IsAny<string>()))
             .ReturnsAsync("!@#");
@@ -47,7 +47,7 @@ public class LoginUserHandlerTests
         
         result.IsSuccess.Should().BeTrue();
         _userRepository.Verify(repo => repo.GetByEmailAsync(It.IsAny<string>()), Times.Once);
-        _passwordHasher.Verify(hasher => hasher.HashPassword(It.IsAny<string>()), Times.Once);
+        _passwordHasher.Verify(hasher => hasher.VerifyHash(It.IsAny<string>(), It.IsAny<string>()), Times.Once);
         _tokenGenerator.Verify(gen => gen.GenerateToken(It.IsAny<string>()), Times.Once);
     }
 
@@ -59,8 +59,8 @@ public class LoginUserHandlerTests
             .Setup(repo => repo.GetByEmailAsync(command.Email))
             .ReturnsAsync(new User() { HashedPassword = "123", Email = command.Email });
         _passwordHasher
-            .Setup(hasher => hasher.HashPassword(command.Password))
-            .ReturnsAsync("1");
+            .Setup(hasher => hasher.VerifyHash("123", command.Password))
+            .ReturnsAsync(false);
         _tokenGenerator
             .Setup(gen => gen.GenerateToken(It.IsAny<string>()))
             .ReturnsAsync("!@#");
@@ -72,7 +72,7 @@ public class LoginUserHandlerTests
         
         result.IsSuccess.Should().BeFalse();
         _userRepository.Verify(repo => repo.GetByEmailAsync(It.IsAny<string>()), Times.Once);
-        _passwordHasher.Verify(hasher => hasher.HashPassword(It.IsAny<string>()), Times.Once);
+        _passwordHasher.Verify(hasher => hasher.VerifyHash(It.IsAny<string>(), It.IsAny<string>()), Times.Once);
         _tokenGenerator.Verify(gen => gen.GenerateToken(It.IsAny<string>()), Times.Never);
     }
 
