@@ -28,7 +28,7 @@ public class UsersController : ControllerBase
     [HttpGet("user/{userId}")]
     public async Task<IActionResult> GetUserProfile(Guid userId)
     {
-        var command = new GetUserProfileCommand(userId);
+        var command = new GetUserProfileQuery(userId);
         var result = await _mediator.Send(command);
         if (result.IsSuccess)
         {
