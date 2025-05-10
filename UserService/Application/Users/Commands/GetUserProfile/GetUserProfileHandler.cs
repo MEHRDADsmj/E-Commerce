@@ -4,7 +4,7 @@ using UserService.Domain.Interfaces;
 
 namespace UserService.Application.Users.Commands.GetUserProfile;
 
-public class GetUserProfileHandler : IRequestHandler<GetUserProfileCommand, Result<GetUserProfileResult>>
+public class GetUserProfileHandler : IRequestHandler<GetUserProfileQuery, Result<GetUserProfileResult>>
 {
     private readonly IUserRepository _userRepository;
 
@@ -13,9 +13,9 @@ public class GetUserProfileHandler : IRequestHandler<GetUserProfileCommand, Resu
         _userRepository = userRepository;
     }
     
-    public async Task<Result<GetUserProfileResult>> Handle(GetUserProfileCommand command, CancellationToken cancellationToken)
+    public async Task<Result<GetUserProfileResult>> Handle(GetUserProfileQuery query, CancellationToken cancellationToken)
     {
-        var user = await _userRepository.GetByIdAsync(command.UserId);
+        var user = await _userRepository.GetByIdAsync(query.UserId);
         if (user == null)
         {
             return Result<GetUserProfileResult>.Failure("User not found");
