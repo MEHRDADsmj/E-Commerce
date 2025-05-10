@@ -34,7 +34,8 @@ public class UsersController : ControllerBase
         var result = await _mediator.Send(command);
         if (result.IsSuccess)
         {
-            return Ok(result.Value);
+            var resp = new GetUserProfileResponseDto(result.Value.Email, result.Value.FullName);
+            return Ok(resp);
         }
         return BadRequest(result.ErrorMessage);
     }
