@@ -41,12 +41,14 @@ public class UsersController : ControllerBase
 
     [AllowAnonymous]
     [HttpPost("login")]
-    public async Task<IActionResult> Login(LoginUserCommand command)
+    public async Task<IActionResult> Login(LoginUserRequestDto dto)
     {
+        var command = new LoginUserCommand(dto.Email, dto.Password);
         var result = await _mediator.Send(command);
         if (result.IsSuccess)
         {
-            return Ok(result.Value);
+            var resp = new LoginUserResponseDto(result.Value.Id, result.Value.Email, result.Value.Token);
+            return Ok(resp);
         }
         return BadRequest(result.ErrorMessage);
     }
