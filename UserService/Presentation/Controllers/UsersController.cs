@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using UserService.Application.Users.Commands.GetUserProfile;
 using UserService.Application.Users.Commands.LoginUser;
+using UserService.Application.Users.Commands.RegisterUser;
+using UserService.Presentation.DTOs;
 
 namespace UserService.Controllers;
 
@@ -45,6 +47,20 @@ public class UsersController : ControllerBase
         if (result.IsSuccess)
         {
             return Ok(result.Value);
+        }
+        return BadRequest(result.ErrorMessage);
+    }
+
+    [AllowAnonymous]
+    [HttpPost("register")]
+    public async Task<IActionResult> Register(RegisterUserRequestDto dto)
+    {
+        var command = new RegisterUserCommand(dto.Email, dto.Password, dto.FullName);
+        var result = await _mediator.Send(command);
+        if (result.IsSuccess)
+        {
+            var resp = new RegisterUserResponseDto(result.Value, dto.Email);
+            return Ok(resp);
         }
         return BadRequest(result.ErrorMessage);
     }
