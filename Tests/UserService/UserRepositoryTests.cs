@@ -1,10 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using UserService.Infrastructure.Repositories;
 using Testcontainers.PostgreSql;
 using UserService.Data;
 using UserService.Domain.Entities;
+using UserService.Infrastructure.Repositories;
 
-namespace Tests.Infrastructure;
+namespace Tests.UserService;
 
 public class UserRepositoryTests : IAsyncLifetime
 {
