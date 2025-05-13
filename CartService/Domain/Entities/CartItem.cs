@@ -1,7 +1,9 @@
-﻿namespace CartService.Domain.Entities;
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace CartService.Domain.Entities;
 
 public class CartItem
 {
     public Guid ProductId { get; set; }
-    public int Quantity { get; set; }
+    [Range(1, int.MaxValue)] public int Quantity { get; set; }
 }
