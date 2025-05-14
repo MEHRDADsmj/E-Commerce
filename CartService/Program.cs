@@ -1,3 +1,5 @@
+using CartService.Domain.Interfaces;
+using CartService.Infrastructure.Repositories;
 using StackExchange.Redis;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -14,6 +16,7 @@ builder.Services.AddSingleton<IConnectionMultiplexer>(serviceProvider =>
                                                                               };
                                                           return ConnectionMultiplexer.Connect(configOptions);
                                                       });
+builder.Services.AddScoped<ICartRepository, RedisCartRepository>();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
