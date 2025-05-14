@@ -27,7 +27,7 @@ public class AddItemToCartHandler
 
         try
         {
-            await _cartRepository.AddItemAsync(command.UserId, command.ProductId, command.Quantity);
+            await _cartRepository.AddItemAsync(cart.UserId, command.ProductId, command.Quantity);
             return Result<bool>.Success(true);
         }
         catch (Exception e)
