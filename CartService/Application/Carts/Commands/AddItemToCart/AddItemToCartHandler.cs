@@ -1,10 +1,10 @@
-﻿using CartService.Domain.Entities;
-using CartService.Domain.Interfaces;
+﻿using CartService.Domain.Interfaces;
+using MediatR;
 using Shared.Data;
 
 namespace CartService.Application.Carts.Commands.AddItemToCart;
 
-public class AddItemToCartHandler
+public class AddItemToCartHandler : IRequestHandler<AddItemToCartCommand, Result<bool>>
 {
     private readonly ICartRepository _cartRepository;
 
