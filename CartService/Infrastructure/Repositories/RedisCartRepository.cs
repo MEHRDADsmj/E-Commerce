@@ -1,0 +1,100 @@
+﻿using System.Text.Json;
+using CartService.Domain.Entities;
+using CartService.Domain.Interfaces;
+using StackExchange.Redis;
+
+namespace CartService.Infrastructure.Repositories;
+
+public class RedisCartRepository : ICartRepository
+{
+    private readonly IDatabase _database;
+
+    public RedisCartRepository(IConnectionMultiplexer connectionMultiplexer)
+    {
+        _database = connectionMultiplexer.GetDatabase();
+    }
+    
+    private string GetKey(Guid userId) => $"cart:{userId}";
+    
+    public async Task<Cart?> GetAsync(Guid userId)
+    {
+        var data = await _database.StringGetAsync(GetKey(userId));
+        if (data.IsNullOrEmpty) return null;
+        
+        return JsonSerializer.Deserialize<Cart>(data!);
+    }
+
+    public async Task AddItemAsync(Guid userId, Guid productId, int quantity)
+    {
+        var cart = await GetAsync(userId);
+        if (cart == null) return;
+
+        var item = cart.Items.FirstOrDefault(item => item.ProductId == productId);
+        if (item != null)
+        {
+            item.Quantity += quantity;
+        }
+        else
+        {
+            item = new CartItem()
+                          {
+                              ProductId = productId,
+                              Quantity = quantity,
+                          };
+            cart.Items.Add(item);
+        }
+        
+        await SaveAsync(cart);
+    }
+
+    public async Task RemoveItemAsync(Guid userId, Guid productId)
+    {
+        var cart = await GetAsync(userId);
+        if (cart == null) return;
+
+        var item = cart.Items.FirstOrDefault(item => item.ProductId == productId);
+        if (item == null) return;
+        cart.Items.Remove(item);
+        await SaveAsync(cart);
+    }
+
+    public async Task UpdateItemQuantityAsync(Guid userId, Guid productId, int newQuantity)
+    {
+        var cart = await GetAsync(userId);
+        if (cart == null) return;
+        
+        var item = cart.Items.FirstOrDefault(item => item.ProductId == productId);
+        if (item == null) return;
+        item.Quantity = newQuantity;
+        await SaveAsync(cart);
+    }
+
+    public async Task ClearCartAsync(Guid userId)
+    {
+        var cart = await GetAsync(userId);
+        if (cart == null) return;
+        
+        cart.Items.Clear();
+        await SaveAsync(cart);
+    }
+
+    public async Task<Cart?> CreateCartAsync(Guid userId)
+    {
+        var cart = await GetAsync(userId);
+        if (cart != null) return cart;
+
+        var newCart = new Cart()
+                      {
+                          UserId = userId,
+                          Items = new List<CartItem>(),
+                      };
+        await SaveAsync(newCart);
+        return newCart;
+    }
+
+    public async Task SaveAsync(Cart cart)
+    {
+        var data = JsonSerializer.Serialize(cart);
+        await _database.StringSetAsync(GetKey(cart.UserId), data);
+    }
+}
