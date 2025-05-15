@@ -14,7 +14,7 @@ public class RedisCartRepositoryTests : IAsyncLifetime
     
     public async Task InitializeAsync()
     {
-        _redisContainer = new RedisBuilder().Build();
+        _redisContainer = new RedisBuilder().WithImage("redis:6").WithCleanUp(true).Build();
         await _redisContainer.StartAsync();
 
         _connectionMultiplexer = await ConnectionMultiplexer.ConnectAsync(_redisContainer.GetConnectionString());

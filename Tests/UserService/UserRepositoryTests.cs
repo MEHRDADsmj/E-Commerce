@@ -13,7 +13,7 @@ public class UserRepositoryTests : IAsyncLifetime
 
     public async Task InitializeAsync()
     {
-        _dbContainer = new PostgreSqlBuilder().Build();
+        _dbContainer = new PostgreSqlBuilder().WithImage("postgres:14.4-alpine").WithCleanUp(true).Build();
         await _dbContainer.StartAsync();
 
         var options = new DbContextOptionsBuilder<UserDbContext>();
