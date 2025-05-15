@@ -1,3 +1,6 @@
-﻿namespace CartService.Application.Carts.Commands.ClearCart;
+﻿using MediatR;
+using Shared.Data;
 
-public record ClearCartCommand(Guid UserId);
+namespace CartService.Application.Carts.Commands.ClearCart;
+
+public record ClearCartCommand(Guid UserId) : IRequest<Result<bool>>;

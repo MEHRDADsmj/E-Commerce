@@ -1,9 +1,10 @@
 ﻿using CartService.Domain.Interfaces;
+using MediatR;
 using Shared.Data;
 
 namespace CartService.Application.Carts.Commands.ClearCart;
 
-public class ClearCartHandler
+public class ClearCartHandler : IRequestHandler<ClearCartCommand, Result<bool>>
 {
     private readonly ICartRepository _cartRepository;
 
