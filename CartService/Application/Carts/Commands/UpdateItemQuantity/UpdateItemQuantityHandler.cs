@@ -1,9 +1,10 @@
 ﻿using CartService.Domain.Interfaces;
+using MediatR;
 using Shared.Data;
 
 namespace CartService.Application.Carts.Commands.UpdateItemQuantity;
 
-public class UpdateItemQuantityHandler
+public class UpdateItemQuantityHandler : IRequestHandler<UpdateItemQuantityCommand, Result<bool>>
 {
     private readonly ICartRepository _cartRepository;
 

@@ -1,3 +1,6 @@
-﻿namespace CartService.Application.Carts.Commands.UpdateItemQuantity;
+﻿using MediatR;
+using Shared.Data;
 
-public record UpdateItemQuantityCommand(Guid UserId, Guid ProductId, int NewQuantity);
+namespace CartService.Application.Carts.Commands.UpdateItemQuantity;
+
+public record UpdateItemQuantityCommand(Guid UserId, Guid ProductId, int NewQuantity) : IRequest<Result<bool>>;
