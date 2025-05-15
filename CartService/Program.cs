@@ -1,3 +1,4 @@
+using System.Text.Json;
 using CartService.Domain.Interfaces;
 using CartService.Infrastructure.Repositories;
 using StackExchange.Redis;
@@ -17,7 +18,10 @@ builder.Services.AddSingleton<IConnectionMultiplexer>(serviceProvider =>
                                                           return ConnectionMultiplexer.Connect(configOptions);
                                                       });
 builder.Services.AddScoped<ICartRepository, RedisCartRepository>();
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddJsonOptions(options =>
+                                                 {
+                                                     options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower;
+                                                 });
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 

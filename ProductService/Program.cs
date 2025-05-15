@@ -1,3 +1,4 @@
+using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
 using ProductService.Data;
 
@@ -9,7 +10,10 @@ builder.Services.AddDbContext<ProductDbContext>(options =>
                                                 {
                                                     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
                                                 });
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddJsonOptions(options =>
+                                                 { 
+                                                     options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower;;
+                                                 });
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
