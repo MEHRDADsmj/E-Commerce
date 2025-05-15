@@ -1,9 +1,10 @@
 ﻿using CartService.Domain.Interfaces;
+using MediatR;
 using Shared.Data;
 
 namespace CartService.Application.Carts.Commands.RemoveItemFromCart;
 
-public class RemoveItemFromCartHandler
+public class RemoveItemFromCartHandler : IRequestHandler<RemoveItemFromCartCommand, Result<bool>>
 {
     private readonly ICartRepository _cartRepository;
 
