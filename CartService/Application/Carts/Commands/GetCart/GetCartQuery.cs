@@ -1,3 +1,7 @@
-﻿namespace CartService.Application.Carts.Commands.GetCart;
+﻿using CartService.Domain.Entities;
+using MediatR;
+using Shared.Data;
 
-public record GetCartQuery(Guid UserId);
+namespace CartService.Application.Carts.Commands.GetCart;
+
+public record GetCartQuery(Guid UserId) : IRequest<Result<Cart>>;

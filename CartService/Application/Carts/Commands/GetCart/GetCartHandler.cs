@@ -1,10 +1,11 @@
 ﻿using CartService.Domain.Entities;
 using CartService.Domain.Interfaces;
+using MediatR;
 using Shared.Data;
 
 namespace CartService.Application.Carts.Commands.GetCart;
 
-public class GetCartHandler
+public class GetCartHandler : IRequestHandler<GetCartQuery, Result<Cart>>
 {
     private readonly ICartRepository _cartRepository;
 
