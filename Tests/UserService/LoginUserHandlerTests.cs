@@ -37,7 +37,7 @@ public class LoginUserHandlerTests
             .Setup(hasher => hasher.VerifyHash("123", command.Password))
             .ReturnsAsync(true);
         _tokenGenerator
-            .Setup(gen => gen.GenerateToken(It.IsAny<string>()))
+            .Setup(gen => gen.GenerateToken(It.IsAny<string>(), It.IsAny<Guid>()))
             .ReturnsAsync("!@#");
         _configuration
             .Setup(configuration => configuration["JWT:Key"])
@@ -48,7 +48,7 @@ public class LoginUserHandlerTests
         result.IsSuccess.Should().BeTrue();
         _userRepository.Verify(repo => repo.GetByEmailAsync(It.IsAny<string>()), Times.Once);
         _passwordHasher.Verify(hasher => hasher.VerifyHash(It.IsAny<string>(), It.IsAny<string>()), Times.Once);
-        _tokenGenerator.Verify(gen => gen.GenerateToken(It.IsAny<string>()), Times.Once);
+        _tokenGenerator.Verify(gen => gen.GenerateToken(It.IsAny<string>(), It.IsAny<Guid>()), Times.Once);
     }
 
     [Fact]
@@ -62,7 +62,7 @@ public class LoginUserHandlerTests
             .Setup(hasher => hasher.VerifyHash("123", command.Password))
             .ReturnsAsync(false);
         _tokenGenerator
-            .Setup(gen => gen.GenerateToken(It.IsAny<string>()))
+            .Setup(gen => gen.GenerateToken(It.IsAny<string>(), It.IsAny<Guid>()))
             .ReturnsAsync("!@#");
         _configuration
             .Setup(configuration => configuration["JWT:Key"])
@@ -73,7 +73,7 @@ public class LoginUserHandlerTests
         result.IsSuccess.Should().BeFalse();
         _userRepository.Verify(repo => repo.GetByEmailAsync(It.IsAny<string>()), Times.Once);
         _passwordHasher.Verify(hasher => hasher.VerifyHash(It.IsAny<string>(), It.IsAny<string>()), Times.Once);
-        _tokenGenerator.Verify(gen => gen.GenerateToken(It.IsAny<string>()), Times.Never);
+        _tokenGenerator.Verify(gen => gen.GenerateToken(It.IsAny<string>(), It.IsAny<Guid>()), Times.Never);
     }
 
     [Fact]
@@ -87,7 +87,7 @@ public class LoginUserHandlerTests
             .Setup(hasher => hasher.HashPassword(command.Password))
             .ReturnsAsync("123");
         _tokenGenerator
-            .Setup(gen => gen.GenerateToken(It.IsAny<string>()))
+            .Setup(gen => gen.GenerateToken(It.IsAny<string>(), It.IsAny<Guid>()))
             .ReturnsAsync("!@#");
         _configuration
             .Setup(configuration => configuration["JWT:Key"])
@@ -98,6 +98,6 @@ public class LoginUserHandlerTests
         result.IsSuccess.Should().BeFalse();
         _userRepository.Verify(repo => repo.GetByEmailAsync(It.IsAny<string>()), Times.Once);
         _passwordHasher.Verify(hasher => hasher.HashPassword(It.IsAny<string>()), Times.Never);
-        _tokenGenerator.Verify(gen => gen.GenerateToken(It.IsAny<string>()), Times.Never);
+        _tokenGenerator.Verify(gen => gen.GenerateToken(It.IsAny<string>(), It.IsAny<Guid>()), Times.Never);
     }
 }

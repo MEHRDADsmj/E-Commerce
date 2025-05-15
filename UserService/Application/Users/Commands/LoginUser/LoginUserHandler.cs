@@ -34,7 +34,8 @@ public class LoginUserHandler : IRequestHandler<LoginUserCommand, Result<LoginUs
             return Result<LoginUserResult>.Failure("Invalid username or password");
         }
 
-        var result = new LoginUserResult(user.Id, user.Email, await _tokenGenerator.GenerateToken(_configuration["Jwt:Key"]));
+        var result = new LoginUserResult(user.Id, user.Email,
+                                         await _tokenGenerator.GenerateToken(_configuration["Jwt:Key"], user.Id));
         return Result<LoginUserResult>.Success(result);
     }
 }
