@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json;
 using CartService.Domain.Entities;
 using CartService.Domain.Interfaces;
 using StackExchange.Redis;
@@ -33,6 +34,8 @@ public class RedisCartRepository : ICartRepository
         if (item != null)
         {
             item.Quantity += quantity;
+            var context = new ValidationContext(item);
+            Validator.ValidateObject(item, context, true);
         }
         else
         {
@@ -41,6 +44,8 @@ public class RedisCartRepository : ICartRepository
                               ProductId = productId,
                               Quantity = quantity,
                           };
+            var context = new ValidationContext(item);
+            Validator.ValidateObject(item, context, true);
             cart.Items.Add(item);
         }
         
@@ -66,6 +71,8 @@ public class RedisCartRepository : ICartRepository
         var item = cart.Items.FirstOrDefault(item => item.ProductId == productId);
         if (item == null) return;
         item.Quantity = newQuantity;
+        var context = new ValidationContext(item);
+        Validator.ValidateObject(item, context, true);
         await SaveAsync(cart);
     }
 

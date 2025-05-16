@@ -45,4 +45,24 @@ public class CartsController : ControllerBase
         }
         return BadRequest(result.ErrorMessage);
     }
+
+    [HttpPost("add")]
+    public async Task<IActionResult> AddItemToCart(AddItemToCartRequestDto dto)
+    {
+        var userId = HttpContext.User.Claims.FirstOrDefault(claim => claim.Type == "user_id")?.Value;
+        if (userId == null)
+        {
+            return Unauthorized("JWT token is invalid");
+        }
+        
+        var command = new AddItemToCartCommand(Guid.Parse(userId), dto.ProductId, dto.Quantity);
+        var result = await _mediator.Send(command);
+
+        if (result.IsSuccess)
+        {
+            var resp = new AddItemToCartResponseDto(dto.ProductId, dto.Quantity);
+            return Ok(resp);
+        }
+        return BadRequest(result.ErrorMessage);
+    }
 }
