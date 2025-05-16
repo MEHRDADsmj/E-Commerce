@@ -1,4 +1,5 @@
-﻿using CartService.Domain.Entities;
+﻿using System.Data;
+using CartService.Domain.Entities;
 using CartService.Infrastructure.Repositories;
 using FluentAssertions;
 using StackExchange.Redis;
@@ -127,12 +128,17 @@ public class RedisCartRepositoryTests : IAsyncLifetime
         cart.Items.Add(new CartItem() { ProductId = productId, Quantity = 2 });
         
         await _repository.SaveAsync(cart);
-        await _repository.AddItemAsync(userId, productId, 5);
-        
-        var result = await _repository.GetAsync(userId);
-        result.Should().NotBeNull();
-        result.UserId.Should().Be(userId);
-        result.Items.Should().Contain(item => item.ProductId == productId && item.Quantity == 2 + 5);
+        try
+        {
+            await _repository.AddItemAsync(userId, productId, 5);
+            var result = await _repository.GetAsync(userId);
+            Assert.Fail("Did not throw exception");
+        }
+        catch (Exception ex)
+        {
+            ex.Should().BeOfType<DuplicateNameException>();
+            cart.Items.Should().Contain(item => item.ProductId == productId && item.Quantity == 2);
+        }
     }
 
     public Task DisposeAsync()

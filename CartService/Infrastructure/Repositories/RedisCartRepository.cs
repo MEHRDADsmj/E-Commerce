@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Data;
 using System.Text.Json;
 using CartService.Domain.Entities;
 using CartService.Domain.Interfaces;
@@ -33,21 +34,17 @@ public class RedisCartRepository : ICartRepository
         var item = cart.Items.FirstOrDefault(item => item.ProductId == productId);
         if (item != null)
         {
-            item.Quantity += quantity;
-            var context = new ValidationContext(item);
-            Validator.ValidateObject(item, context, true);
+            throw new DuplicateNameException("Product already exists");
         }
-        else
-        {
-            item = new CartItem()
-                          {
-                              ProductId = productId,
-                              Quantity = quantity,
-                          };
-            var context = new ValidationContext(item);
-            Validator.ValidateObject(item, context, true);
-            cart.Items.Add(item);
-        }
+
+        item = new CartItem()
+               {
+                   ProductId = productId,
+                   Quantity = quantity,
+               };
+        var context = new ValidationContext(item);
+        Validator.ValidateObject(item, context, true);
+        cart.Items.Add(item);
         
         await SaveAsync(cart);
     }
