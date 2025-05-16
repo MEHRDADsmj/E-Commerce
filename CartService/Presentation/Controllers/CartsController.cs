@@ -1,5 +1,6 @@
 ﻿using CartService.Application.Carts.Commands.AddItemToCart;
 using CartService.Application.Carts.Commands.GetCart;
+using CartService.Presentation.DTOs;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -39,7 +40,8 @@ public class CartsController : ControllerBase
 
         if (result.IsSuccess)
         {
-            return Ok(result.Value);
+            var resp = new GetUserCartResponseDto(result.Value);
+            return Ok(resp);
         }
         return BadRequest(result.ErrorMessage);
     }
