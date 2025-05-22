@@ -25,15 +25,24 @@ public class CartsController : ControllerBase
     {
         return Ok("Carts Healthy");
     }
+    
+    private bool GetUserIdFromClaims(out string? userId, out IActionResult actionResult)
+    {
+        userId = HttpContext.User.Claims.FirstOrDefault(claim => claim.Type == "user_id")?.Value;
+        if (userId == null)
+        {
+            actionResult = Unauthorized("JWT token is invalid");
+            return true;
+        }
+
+        actionResult = new OkResult();
+        return false;
+    }
 
     [HttpGet]
     public async Task<IActionResult> GetCart()
     {
-        var userId = HttpContext.User.Claims.FirstOrDefault(claim => claim.Type == "user_id")?.Value;
-        if (userId == null)
-        {
-            return Unauthorized("JWT token is invalid");
-        }
+        if (GetUserIdFromClaims(out var userId, out var actionResult)) return actionResult;
 
         var query = new GetCartQuery(Guid.Parse(userId));
         var result = await _mediator.Send(query);
@@ -49,12 +58,8 @@ public class CartsController : ControllerBase
     [HttpPost("add")]
     public async Task<IActionResult> AddItemToCart(AddItemToCartRequestDto dto)
     {
-        var userId = HttpContext.User.Claims.FirstOrDefault(claim => claim.Type == "user_id")?.Value;
-        if (userId == null)
-        {
-            return Unauthorized("JWT token is invalid");
-        }
-        
+        if (GetUserIdFromClaims(out var userId, out var actionResult)) return actionResult;
+
         var command = new AddItemToCartCommand(Guid.Parse(userId), dto.ProductId, dto.Quantity);
         var result = await _mediator.Send(command);
 
