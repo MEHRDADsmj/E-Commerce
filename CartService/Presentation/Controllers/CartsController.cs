@@ -1,5 +1,6 @@
 ﻿using CartService.Application.Carts.Commands.AddItemToCart;
 using CartService.Application.Carts.Commands.GetCart;
+using CartService.Application.Carts.Commands.RemoveItemFromCart;
 using CartService.Presentation.DTOs;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -67,6 +68,21 @@ public class CartsController : ControllerBase
         {
             var resp = new AddItemToCartResponseDto(dto.ProductId, dto.Quantity);
             return Ok(resp);
+        }
+        return BadRequest(result.ErrorMessage);
+    }
+    
+    [HttpPost("remove")]
+    public async Task<IActionResult> RemoveItemFromCart(RemoveItemFromCartRequestDto dto)
+    {
+        if (GetUserIdFromClaims(out var userId, out var actionResult)) return actionResult;
+
+        var command = new RemoveItemFromCartCommand(Guid.Parse(userId), dto.ProductId);
+        var result = await _mediator.Send(command);
+
+        if (result.IsSuccess)
+        {
+            return Ok();
         }
         return BadRequest(result.ErrorMessage);
     }
