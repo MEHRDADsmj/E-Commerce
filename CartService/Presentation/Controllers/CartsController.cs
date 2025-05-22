@@ -1,4 +1,5 @@
 ﻿using CartService.Application.Carts.Commands.AddItemToCart;
+using CartService.Application.Carts.Commands.ClearCart;
 using CartService.Application.Carts.Commands.GetCart;
 using CartService.Application.Carts.Commands.RemoveItemFromCart;
 using CartService.Application.Carts.Commands.UpdateItemQuantity;
@@ -100,6 +101,21 @@ public class CartsController : ControllerBase
         {
             var resp = new UpdateItemQuantityResponseDto(dto.ProductId, dto.NewQuantity);
             return Ok(resp);
+        }
+        return BadRequest(result.ErrorMessage);
+    }
+
+    [HttpPost("clear")]
+    public async Task<IActionResult> ClearCart()
+    {
+        if (GetUserIdFromClaims(out var userId, out var actionResult)) return actionResult;
+        
+        var command = new ClearCartCommand(Guid.Parse(userId));
+        var result = await _mediator.Send(command);
+        
+        if (result.IsSuccess)
+        {
+            return Ok();
         }
         return BadRequest(result.ErrorMessage);
     }
