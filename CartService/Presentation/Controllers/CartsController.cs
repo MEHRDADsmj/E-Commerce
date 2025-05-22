@@ -1,6 +1,7 @@
 ﻿using CartService.Application.Carts.Commands.AddItemToCart;
 using CartService.Application.Carts.Commands.GetCart;
 using CartService.Application.Carts.Commands.RemoveItemFromCart;
+using CartService.Application.Carts.Commands.UpdateItemQuantity;
 using CartService.Presentation.DTOs;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -83,6 +84,22 @@ public class CartsController : ControllerBase
         if (result.IsSuccess)
         {
             return Ok();
+        }
+        return BadRequest(result.ErrorMessage);
+    }
+
+    [HttpPost("update")]
+    public async Task<IActionResult> UpdateItemQuantity(UpdateItemQuantityRequestDto dto)
+    {
+        if (GetUserIdFromClaims(out var userId, out var actionResult)) return actionResult;
+        
+        var command = new UpdateItemQuantityCommand(Guid.Parse(userId), dto.ProductId, dto.NewQuantity);
+        var result = await _mediator.Send(command);
+        
+        if (result.IsSuccess)
+        {
+            var resp = new UpdateItemQuantityResponseDto(dto.ProductId, dto.NewQuantity);
+            return Ok(resp);
         }
         return BadRequest(result.ErrorMessage);
     }
