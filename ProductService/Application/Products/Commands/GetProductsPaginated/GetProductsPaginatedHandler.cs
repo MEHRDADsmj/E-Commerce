@@ -16,6 +16,10 @@ public class GetProductsPaginatedHandler : IRequestHandler<GetProductsPaginatedQ
     
     public async Task<Result<IEnumerable<Product>>> Handle(GetProductsPaginatedQuery request, CancellationToken cancellationToken)
     {
+        if (request.PageSize < 1 || request.Page < 1)
+        {
+            return Result<IEnumerable<Product>>.Failure("Page and page size must be greater than 0");
+        }
         var products = await _productRepository.GetAllAsync(request.Page, request.PageSize);
         if (products.Count == 0)
         {

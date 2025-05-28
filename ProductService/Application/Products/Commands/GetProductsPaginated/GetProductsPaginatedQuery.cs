@@ -4,4 +4,4 @@ using Shared.Data;
 
 namespace ProductService.Application.Products.Commands.GetProductsPaginated;
 
-public record GetProductsPaginatedQuery(uint Page, uint PageSize) : IRequest<Result<IEnumerable<Product>>>;
+public record GetProductsPaginatedQuery(int Page, int PageSize) : IRequest<Result<IEnumerable<Product>>>;
