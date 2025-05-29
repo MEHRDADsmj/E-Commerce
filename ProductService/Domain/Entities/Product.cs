@@ -9,11 +9,11 @@ public class Product
     public string? Description { get; set; }
     [Required] public decimal UnitPrice { get; set; }
 
-    public Product(string productName, decimal productUnitPrice, string? productDescription)
+    public Product(string name, decimal unitPrice, string? description)
     {
         Id = Guid.NewGuid();
-        Name = productName;
-        Description = productDescription;
-        UnitPrice = productUnitPrice;
+        Name = name;
+        Description = description;
+        UnitPrice = unitPrice;
     }
 }
