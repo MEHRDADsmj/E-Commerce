@@ -1,19 +1,41 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using ProductService.Application.Products.Commands.AddProduct;
+using ProductService.Presentation.DTOs;
 
 namespace ProductService.Presentation.Controllers;
 
+[Authorize]
 [Route("api/[controller]")]
 [ApiController]
 public class ProductsController : ControllerBase
 {
-    public ProductsController()
+    private readonly IMediator _mediator;
+    
+    public ProductsController(IMediator mediator)
     {
-        
+        _mediator = mediator;
     }
 
+    [AllowAnonymous]
     [HttpGet("health")]
     public IActionResult GetHealth()
     {
         return Ok("Products Healthy");
+    }
+
+    [HttpPost("add")]
+    public async Task<IActionResult> AddProduct(AddProductRequestDto dto)
+    {
+        var command = new AddProductCommand(dto.Name, dto.UnitPrice, dto.Description);
+        var result = await _mediator.Send(command);
+
+        if (result.IsSuccess)
+        {
+            var resp = new AddProductResponseDto(result.Value.Id, result.Value.Name, result.Value.UnitPrice);
+            return Ok(resp);
+        }
+        return BadRequest(result.ErrorMessage);
     }
 }
