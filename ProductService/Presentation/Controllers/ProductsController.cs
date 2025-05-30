@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ProductService.Application.Products.Commands.AddProduct;
+using ProductService.Application.Products.Commands.DeleteProduct;
 using ProductService.Application.Products.Commands.UpdateProduct;
 using ProductService.Domain.Entities;
 using ProductService.Presentation.DTOs;
@@ -53,6 +54,19 @@ public class ProductsController : ControllerBase
             var resp = new UpdateProductResponseDto(result.Value.Id, result.Value.Name, result.Value.UnitPrice,
                                                     result.Value.Description);
             return Ok(resp);
+        }
+        return BadRequest(result.ErrorMessage);
+    }
+
+    [HttpDelete("delete")]
+    public async Task<IActionResult> DeleteProduct(DeleteProductRequestDto dto)
+    {
+        var command = new DeleteProductCommand(dto.Id);
+        var result = await _mediator.Send(command);
+
+        if (result.IsSuccess)
+        {
+            return Ok();
         }
         return BadRequest(result.ErrorMessage);
     }
