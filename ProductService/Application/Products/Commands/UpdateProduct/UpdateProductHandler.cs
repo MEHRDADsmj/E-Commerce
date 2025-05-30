@@ -24,8 +24,8 @@ public class UpdateProductHandler : IRequestHandler<UpdateProductCommand, Result
 
         try
         {
-            await _productRepository.UpdateAsync(request.Product);
-            return Result<Product>.Success(request.Product);
+            var res = await _productRepository.UpdateAsync(request.Product);
+            return Result<Product>.Success(res);
         }
         catch (Exception ex)
         {

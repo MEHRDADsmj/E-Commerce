@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ProductService.Application.Products.Commands.AddProduct;
+using ProductService.Application.Products.Commands.UpdateProduct;
+using ProductService.Domain.Entities;
 using ProductService.Presentation.DTOs;
 
 namespace ProductService.Presentation.Controllers;
@@ -34,6 +36,22 @@ public class ProductsController : ControllerBase
         if (result.IsSuccess)
         {
             var resp = new AddProductResponseDto(result.Value.Id, result.Value.Name, result.Value.UnitPrice);
+            return Ok(resp);
+        }
+        return BadRequest(result.ErrorMessage);
+    }
+
+    [HttpPost("update")]
+    public async Task<IActionResult> UpdateProduct(UpdateProductRequestDto dto)
+    {
+        var productDto = new ProductDto(dto.Id, dto.Name, dto.UnitPrice, dto.Description);
+        var command = new UpdateProductCommand(productDto);
+        var result = await _mediator.Send(command);
+
+        if (result.IsSuccess)
+        {
+            var resp = new UpdateProductResponseDto(result.Value.Id, result.Value.Name, result.Value.UnitPrice,
+                                                    result.Value.Description);
             return Ok(resp);
         }
         return BadRequest(result.ErrorMessage);

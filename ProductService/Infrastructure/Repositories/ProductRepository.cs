@@ -31,10 +31,18 @@ public class ProductRepository : IProductRepository
         await _context.SaveChangesAsync();
     }
 
-    public async Task UpdateAsync(Product product)
+    public async Task<Product> UpdateAsync(ProductDto product)
     {
-        _context.Products.Update(product);
+        var foundProduct = await _context.Products.FirstOrDefaultAsync(p => p.Id == product.Id);
+        if (foundProduct == null)
+        {
+            throw new KeyNotFoundException();
+        }
+        foundProduct.Name = product.Name;
+        foundProduct.Description = product.Description;
+        foundProduct.UnitPrice = product.UnitPrice;
         await _context.SaveChangesAsync();
+        return foundProduct;
     }
 
     public async Task DeleteAsync(Guid id)
