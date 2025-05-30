@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ProductService.Application.Products.Commands.AddProduct;
 using ProductService.Application.Products.Commands.DeleteProduct;
+using ProductService.Application.Products.Commands.GetBulk;
 using ProductService.Application.Products.Commands.GetProductById;
 using ProductService.Application.Products.Commands.GetProductsPaginated;
 using ProductService.Application.Products.Commands.UpdateProduct;
@@ -90,6 +91,19 @@ public class ProductsController : ControllerBase
     public async Task<IActionResult> GetProductById(Guid id)
     {
         var query = new GetProductByIdQuery(id);
+        var result = await _mediator.Send(query);
+
+        if (result.IsSuccess)
+        {
+            return Ok(result.Value);
+        }
+        return BadRequest(result.ErrorMessage);
+    }
+
+    [HttpPost("bulk")]
+    public async Task<IActionResult> GetProductsBulk(GetProductsBulkRequestDto dto)
+    {
+        var query = new GetProductsBulkQuery(dto.ProductIds);
         var result = await _mediator.Send(query);
 
         if (result.IsSuccess)
