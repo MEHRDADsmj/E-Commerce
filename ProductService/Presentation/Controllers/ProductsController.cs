@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ProductService.Application.Products.Commands.AddProduct;
 using ProductService.Application.Products.Commands.DeleteProduct;
+using ProductService.Application.Products.Commands.GetProductById;
 using ProductService.Application.Products.Commands.GetProductsPaginated;
 using ProductService.Application.Products.Commands.UpdateProduct;
 using ProductService.Domain.Entities;
@@ -76,6 +77,19 @@ public class ProductsController : ControllerBase
     public async Task<IActionResult> GetAllProducts([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
     {
         var query = new GetProductsPaginatedQuery(page, pageSize);
+        var result = await _mediator.Send(query);
+
+        if (result.IsSuccess)
+        {
+            return Ok(result.Value);
+        }
+        return BadRequest(result.ErrorMessage);
+    }
+
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetProductById(Guid id)
+    {
+        var query = new GetProductByIdQuery(id);
         var result = await _mediator.Send(query);
 
         if (result.IsSuccess)
