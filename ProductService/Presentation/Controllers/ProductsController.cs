@@ -75,7 +75,7 @@ public class ProductsController : ControllerBase
     }
 
     [HttpGet()]
-    public async Task<IActionResult> GetAllProducts([FromQuery] int page = 1, [FromQuery] int pageSize = 10)
+    public async Task<IActionResult> GetAllProducts([FromQuery] int page = 1, [FromQuery(Name = "page_size")] int pageSize = 10)
     {
         var query = new GetProductsPaginatedQuery(page, pageSize);
         var result = await _mediator.Send(query);
