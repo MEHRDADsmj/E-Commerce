@@ -9,6 +9,11 @@ public class Product
     public string? Description { get; set; }
     [Required] public decimal UnitPrice { get; set; }
 
+    public Product()
+    {
+        
+    }
+    
     public Product(string name, decimal unitPrice, string? description)
     {
         Id = Guid.NewGuid();
