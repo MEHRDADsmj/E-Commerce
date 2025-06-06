@@ -1,7 +1,6 @@
 ﻿using System.Text.Json;
 using Microsoft.AspNetCore.Mvc;
 using OrderService.MessageBus;
-using Shared.Messaging;
 
 namespace OrderService.Controllers;
 
@@ -27,12 +26,5 @@ public class OrdersController : ControllerBase
     {
         await _rabbitMQPublisher.PublishMessage("Test Order");
         return Ok("Message sent to RabbitMQ");
-    }
-
-    [HttpPost("Order-Create")]
-    public async Task PublishOrderCreatedAsync(OrderCreatedEvent orderCreatedEvent)
-    {
-        var body = JsonSerializer.Serialize(orderCreatedEvent);
-        await _rabbitMQPublisher.PublishMessage(body);
     }
 }

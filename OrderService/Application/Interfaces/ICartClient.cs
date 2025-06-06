@@ -1,6 +1,8 @@
-﻿namespace OrderService.Application.Interfaces;
+﻿using OrderService.Contracts.Entities;
+
+namespace OrderService.Application.Interfaces;
 
 public interface ICartClient
 {
-    
+    Task<Cart?> GetCartAsync(Guid userId);
 }
