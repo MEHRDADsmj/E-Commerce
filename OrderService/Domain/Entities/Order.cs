@@ -20,7 +20,26 @@ public class Order
         Status = OrderStatus.Pending;
         TotalPrice = items.Sum(item => item.UnitPrice * item.Quantity);
     }
+
+    public Order()
+    {
+        Id = Guid.NewGuid();
+        Status = OrderStatus.Pending;
+        TotalPrice = 0;
+        CreatedAt = DateTime.UtcNow;
+    }
     
     public void MarkAsPaid() => Status = OrderStatus.Paid;
     public void MarkAsFailed() => Status = OrderStatus.Failed;
+
+    public void SetUserId(Guid userId)
+    {
+        UserId = userId;
+    }
+
+    public void SetItems(List<OrderItem> items)
+    {
+        Items = items;
+        TotalPrice = items.Sum(item => item.UnitPrice * item.Quantity);
+    }
 }

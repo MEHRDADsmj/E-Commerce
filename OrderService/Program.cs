@@ -1,4 +1,8 @@
 using System.Text.Json;
+using Microsoft.EntityFrameworkCore;
+using OrderService.Domain.Interfaces;
+using OrderService.Infrastructure;
+using OrderService.Infrastructure.Repositories;
 using OrderService.MessageBus;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,6 +14,11 @@ builder.Services.AddControllers().AddJsonOptions(options =>
                                                  {
                                                      options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower;
                                                  });
+builder.Services.AddDbContext<OrderDbContext>(options =>
+                                              {
+                                                  options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
+                                              });
+builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -20,6 +29,13 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+}
+
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    var context = services.GetRequiredService<OrderDbContext>();
+    context.Database.Migrate();
 }
 
 app.UseHttpsRedirection();

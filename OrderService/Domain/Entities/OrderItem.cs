@@ -4,8 +4,8 @@ namespace OrderService.Domain.Entities;
 
 public class OrderItem
 {
-    public Guid ProductId { get; private set; }
-    public string ProductName { get; private set; }
+    [Key] public Guid ProductId { get; private set; }
+    [MaxLength(64)] public string ProductName { get; private set; }
     public decimal UnitPrice { get; private set; }
     [Range(1, int.MaxValue)] public int Quantity { get; private set; }
 
