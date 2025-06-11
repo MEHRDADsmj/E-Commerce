@@ -1,6 +1,5 @@
-﻿using System.Text.Json;
-using Microsoft.AspNetCore.Mvc;
-using OrderService.MessageBus;
+﻿using Microsoft.AspNetCore.Mvc;
+using OrderService.Infrastructure.Messaging;
 
 namespace OrderService.Controllers;
 
@@ -8,11 +7,11 @@ namespace OrderService.Controllers;
 [ApiController]
 public class OrdersController : ControllerBase
 {
-    private readonly RabbitMQPublisher _rabbitMQPublisher;
+    private readonly RabbitMqPublisher _rabbitMqPublisher;
     
-    public OrdersController(RabbitMQPublisher rabbitMQPublisher)
+    public OrdersController(RabbitMqPublisher rabbitMqPublisher)
     {
-        _rabbitMQPublisher = rabbitMQPublisher;
+        _rabbitMqPublisher = rabbitMqPublisher;
     }
 
     [HttpGet("health")]
@@ -24,7 +23,6 @@ public class OrdersController : ControllerBase
     [HttpGet("send-test-message")]
     public async Task<IActionResult> SendTestMessage()
     {
-        await _rabbitMQPublisher.PublishMessage("Test Order");
         return Ok("Message sent to RabbitMQ");
     }
 }

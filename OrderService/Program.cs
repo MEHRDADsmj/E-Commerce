@@ -2,14 +2,14 @@ using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
 using OrderService.Domain.Interfaces;
 using OrderService.Infrastructure;
+using OrderService.Infrastructure.Messaging;
 using OrderService.Infrastructure.Repositories;
-using OrderService.MessageBus;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddSingleton<RabbitMQPublisher>();
+builder.Services.AddSingleton<RabbitMqPublisher>();
 builder.Services.AddControllers().AddJsonOptions(options =>
                                                  {
                                                      options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower;
