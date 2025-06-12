@@ -29,6 +29,10 @@ builder.Services.AddDbContext<OrderDbContext>(options =>
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 builder.Services.AddScoped<ICartClient, HttpCartClient>();
 builder.Services.AddScoped<IProductClient, HttpProductClient>();
+builder.Services.AddHttpClient<IProductClient, HttpProductClient>(client =>
+                                                                  {
+                                                                      client.BaseAddress = new Uri(builder.Configuration["Services:ProductService"]);
+                                                                  });
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 

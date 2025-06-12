@@ -1,12 +1,27 @@
-﻿using OrderService.Application.Interfaces;
+﻿using System.Text.Json;
+using OrderService.Application.Interfaces;
 using OrderService.Contracts.Entities;
 
 namespace OrderService.Infrastructure.ServiceClients;
 
 public class HttpProductClient : IProductClient
 {
-    public Task<IEnumerable<ProductInfo>> GetProducts(List<Guid> productIds)
+    private readonly HttpClient _httpClient;
+
+    public HttpProductClient(HttpClient httpClient)
     {
-        throw new NotImplementedException();
+        _httpClient = httpClient;
+    }
+    
+    
+    public async Task<IEnumerable<ProductInfo>> GetProducts(List<Guid> productIds)
+    {
+        var opt = new JsonSerializerOptions
+                  {
+                      PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower,
+                  };
+        var response = await _httpClient.PostAsJsonAsync($"api/products/bulk", productIds, opt);
+        response.EnsureSuccessStatusCode();
+        return await response.Content.ReadFromJsonAsync<IEnumerable<ProductInfo>>() ?? Array.Empty<ProductInfo>();
     }
 }
