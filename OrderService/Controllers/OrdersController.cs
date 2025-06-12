@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using OrderService.Infrastructure.Messaging;
+using OrderService.Application.Interfaces;
 
 namespace OrderService.Controllers;
 
@@ -7,11 +7,11 @@ namespace OrderService.Controllers;
 [ApiController]
 public class OrdersController : ControllerBase
 {
-    private readonly RabbitMqPublisher _rabbitMqPublisher;
+    private readonly IEventPublisher _eventPublisher;
     
-    public OrdersController(RabbitMqPublisher rabbitMqPublisher)
+    public OrdersController(IEventPublisher eventPublisher)
     {
-        _rabbitMqPublisher = rabbitMqPublisher;
+        _eventPublisher = eventPublisher;
     }
 
     [HttpGet("health")]

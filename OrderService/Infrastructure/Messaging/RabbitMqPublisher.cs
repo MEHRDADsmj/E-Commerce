@@ -13,7 +13,7 @@ public class RabbitMqPublisher : IEventPublisher
 
     public RabbitMqPublisher(IConfiguration config)
     {
-        Init(config);
+        Init(config).Wait();
     }
 
     private async Task Init(IConfiguration config)
