@@ -46,6 +46,7 @@ public class CreateOrderHandler : IRequestHandler<CreateOrderCommand, Result<Gui
 
         var order = new Order(cart.UserId, orderItems);
         await _orderRepository.AddAsync(order);
+        await _orderRepository.SaveAsync();
 
         await _eventPublisher.PublishAsync(new OrderCreatedEvent(order.Id, order.UserId, order.TotalPrice));
         

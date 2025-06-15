@@ -20,7 +20,7 @@ public class HttpProductClient : IProductClient
                   {
                       PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower,
                   };
-        var response = await _httpClient.PostAsJsonAsync($"api/products/bulk", productIds, opt);
+        var response = await _httpClient.PostAsJsonAsync($"products/bulk", productIds, opt);
         response.EnsureSuccessStatusCode();
         return await response.Content.ReadFromJsonAsync<IEnumerable<ProductInfo>>() ?? Array.Empty<ProductInfo>();
     }

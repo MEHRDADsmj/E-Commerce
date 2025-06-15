@@ -20,7 +20,6 @@ public class OrderRepository : IOrderRepository
             return;
         }
         await _context.Orders.AddAsync(order);
-        await SaveAsync();
     }
 
     public async Task<Order?> GetByIdAsync(Guid orderId)
