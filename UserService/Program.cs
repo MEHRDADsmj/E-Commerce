@@ -4,6 +4,7 @@ using System.Text.Json;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using UserService.Application.Interfaces;
 using UserService.Data;
 using UserService.Domain.Interfaces;
@@ -45,7 +46,33 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
                                         };
 });
 builder.Services.AddAuthorization();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(options =>
+                               {
+                                   options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
+                                                                           {
+                                                                               Name = "Authorization",
+                                                                               Type = SecuritySchemeType.Http,
+                                                                               Scheme = "Bearer",
+                                                                               BearerFormat = "JWT",
+                                                                               In = ParameterLocation.Header,
+                                                                               Description = "JWT Authorization header using the Bearer scheme."
+                                                                           });
+
+                                   options.AddSecurityRequirement(new OpenApiSecurityRequirement()
+                                                                  {
+                                                                      {
+                                                                          new OpenApiSecurityScheme()
+                                                                          {
+                                                                              Reference = new OpenApiReference()
+                                                                                          {
+                                                                                              Type = ReferenceType.SecurityScheme,
+                                                                                              Id = "Bearer"
+                                                                                          }
+                                                                          },
+                                                                          new string[] { }
+                                                                      }
+                                                                  });
+                               });
 
 var app = builder.Build();
 
