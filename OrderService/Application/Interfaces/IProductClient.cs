@@ -4,5 +4,5 @@ namespace OrderService.Application.Interfaces;
 
 public interface IProductClient
 {
-    Task<IEnumerable<ProductInfo>> GetProducts(List<Guid> productIds);
+    Task<IEnumerable<ProductInfo>> GetProducts(List<Guid> productIds, string token);
 }
