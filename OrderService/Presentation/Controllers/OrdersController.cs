@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OrderService.Application.Orders.Commands.CreateOrder;
+using OrderService.Application.Orders.Commands.GetOrderById;
+using OrderService.Presentation.DTOs;
 
 namespace OrderService.Presentation.Controllers;
 
@@ -40,6 +42,20 @@ public class OrdersController : ControllerBase
         if (result.IsSuccess)
         {
             return Ok(result.Value);
+        }
+        return BadRequest(result.ErrorMessage);
+    }
+
+    [HttpGet("get/{id}")]
+    public async Task<IActionResult> GetOrderById(Guid id)
+    {
+        var command = new GetOrderByIdQuery(id);
+        var result = await _mediator.Send(command);
+
+        if (result.IsSuccess)
+        {
+            var dto = new GetOrderByIdResponseDto(result.Value);
+            return Ok(dto);
         }
         return BadRequest(result.ErrorMessage);
     }
