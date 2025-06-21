@@ -1,6 +1,9 @@
 using System.Reflection;
+using System.Text;
 using System.Text.Json;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using OrderService.Application.Interfaces;
 using OrderService.Domain.Interfaces;
@@ -66,7 +69,21 @@ builder.Services.AddSwaggerGen(options =>
                                                                       }
                                                                   });
                                });
-
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
+                                                                                        {
+                                                                                            options.TokenValidationParameters = new TokenValidationParameters
+                                                                                                {
+                                                                                                    ValidateIssuer = true,
+                                                                                                    ValidateAudience = false,
+                                                                                                    ValidateLifetime = true,
+                                                                                                    ValidateIssuerSigningKey = true,
+                                                                                                    IssuerSigningKey =
+                                                                                                        new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Key"])),
+                                                                                                    ValidIssuer = "Mehrdad",
+                                                                                                    ClockSkew = TimeSpan.Zero
+                                                                                                };
+                                                                                        });
+builder.Services.AddAuthorization();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
