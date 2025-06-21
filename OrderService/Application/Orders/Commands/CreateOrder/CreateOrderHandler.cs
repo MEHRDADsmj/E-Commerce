@@ -26,13 +26,13 @@ public class CreateOrderHandler : IRequestHandler<CreateOrderCommand, Result<Gui
     
     public async Task<Result<Guid>> Handle(CreateOrderCommand request, CancellationToken cancellationToken)
     {
-        var cart = await _cartClient.GetCartAsync(request.UserId);
+        var cart = await _cartClient.GetCartAsync(request.UserId, request.Token);
         if (cart == null || cart.Items.Count == 0)
         {
             return Result<Guid>.Failure("Cart is empty");
         }
 
-        var products = await GetProductsAsDictionary(cart.Items);
+        var products = await GetProductsAsDictionary(cart.Items, request.Token);
 
         List<OrderItem> orderItems;
         try
@@ -53,16 +53,16 @@ public class CreateOrderHandler : IRequestHandler<CreateOrderCommand, Result<Gui
         return Result<Guid>.Success(order.Id);
     }
 
-    private async Task<Dictionary<Guid, ProductInfo>> GetProductsAsDictionary(List<CartItem> items)
+    private async Task<Dictionary<Guid, ProductInfo>> GetProductsAsDictionary(List<CartItem> items, string token)
     {
         var productIds = items.Select((item => item.ProductId)).Distinct();
-        var products = await GetProductsBulk(productIds.ToList());
+        var products = await GetProductsBulk(productIds.ToList(), token);
         return products.ToDictionary(p => p.Id);
     }
     
-    private async Task<IEnumerable<ProductInfo>> GetProductsBulk(List<Guid> productIds)
+    private async Task<IEnumerable<ProductInfo>> GetProductsBulk(List<Guid> productIds, string token)
     {
-        return await _productClient.GetProducts(productIds);
+        return await _productClient.GetProducts(productIds, token);
     }
 
     private IEnumerable<OrderItem> CreateOrderItems(List<CartItem> items, Dictionary<Guid, ProductInfo> productInfos)
