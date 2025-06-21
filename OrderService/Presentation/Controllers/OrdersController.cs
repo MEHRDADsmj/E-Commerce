@@ -42,7 +42,8 @@ public class OrdersController : ControllerBase
 
         if (result.IsSuccess)
         {
-            return Ok(result.Value);
+            var dto = new CreateOrderResponseDto(result.Value);
+            return Ok(dto);
         }
         return BadRequest(result.ErrorMessage);
     }
