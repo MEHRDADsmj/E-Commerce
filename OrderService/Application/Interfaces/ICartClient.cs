@@ -4,5 +4,5 @@ namespace OrderService.Application.Interfaces;
 
 public interface ICartClient
 {
-    Task<Cart?> GetCartAsync(Guid userId);
+    Task<Cart?> GetCartAsync(Guid userId, string token);
 }
