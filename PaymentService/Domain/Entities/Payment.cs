@@ -4,7 +4,7 @@ namespace PaymentService.Domain.Entities;
 
 public class Payment
 {
-    [Key] public Guid OrderId { get; private set; }
+    public Guid OrderId { get; private set; }
     public Guid UserId { get; private set; }
     public decimal TotalPrice { get; private set; }
     public DateTime CreatedAt { get; private set; }
