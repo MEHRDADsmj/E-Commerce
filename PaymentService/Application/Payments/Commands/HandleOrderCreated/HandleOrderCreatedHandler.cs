@@ -25,12 +25,12 @@ public class HandleOrderCreatedHandler : IRequestHandler<HandleOrderCreatedComma
 
         if (payment.Status == PaymentStatus.Completed)
         {
-            await _eventPublisher.PublishAsync(new PaymentCompletedEvent(payment.OrderId));
+            await _eventPublisher.PublishAsync(new PaymentCompletedEvent(payment.OrderId), "payment_completed");
             return Result<Unit>.Success(Unit.Value);
         }
         else
         {
-            await _eventPublisher.PublishAsync(new PaymentFailedEvent(payment.OrderId));
+            await _eventPublisher.PublishAsync(new PaymentFailedEvent(payment.OrderId), "payment_failed");
             return Result<Unit>.Failure("Payment failed");
         }
     }

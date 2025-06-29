@@ -2,5 +2,5 @@
 
 public interface IEventPublisher
 {
-    Task PublishAsync(IEvent evt);
+    Task PublishAsync<T>(T evt, string queueName);
 }
