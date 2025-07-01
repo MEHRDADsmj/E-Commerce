@@ -27,7 +27,7 @@ public class RabbitMqPublisher : IEventPublisher
                       };
         _connection = await factory.CreateConnectionAsync();
         _channel = await _connection.CreateChannelAsync();
-        await _channel.ExchangeDeclareAsync("order_exchange", ExchangeType.Fanout, true);
+        await _channel.ExchangeDeclareAsync("order_created", ExchangeType.Fanout, true);
     }
     
     public async Task PublishAsync(OrderCreatedEvent orderCreatedEvent)
@@ -37,7 +37,7 @@ public class RabbitMqPublisher : IEventPublisher
                     {
                         Persistent = true,
                     };
-        string exchange = "order_exchange";
+        string exchange = "order_created";
         await _channel.BasicPublishAsync(exchange, "", false, props, body);
     }
 }

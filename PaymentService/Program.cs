@@ -1,6 +1,7 @@
 using System.Text.Json;
 using PaymentService.Application.Interfaces;
 using PaymentService.Infrastructure.Messaging;
+using RabbitMQ.Client;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,6 +14,7 @@ builder.Services.AddControllers().AddJsonOptions(options =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddSingleton<IEventPublisher, RabbitMqPublisher>();
+builder.Services.AddHostedService<RabbitMqConsumer>();
 
 var app = builder.Build();
 
