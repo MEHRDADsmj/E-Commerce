@@ -27,17 +27,21 @@ public class RabbitMqPublisher : IEventPublisher
                       };
         _connection = await factory.CreateConnectionAsync();
         _channel = await _connection.CreateChannelAsync();
-        await _channel.ExchangeDeclareAsync("order_created", ExchangeType.Fanout, true);
+        await _channel.ExchangeDeclareAsync("order_created", ExchangeType.Fanout);
     }
     
     public async Task PublishAsync(OrderCreatedEvent orderCreatedEvent)
     {
-        var body = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(orderCreatedEvent));
+        var jsonOpt = new JsonSerializerOptions
+                      {
+                          PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower,
+                      };
+        var body = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(orderCreatedEvent, jsonOpt));
         var props = new BasicProperties()
                     {
                         Persistent = true,
                     };
         string exchange = "order_created";
-        await _channel.BasicPublishAsync(exchange, "", false, props, body);
+        await _channel.BasicPublishAsync(exchange, "order_created_queue", false, props, body);
     }
 }

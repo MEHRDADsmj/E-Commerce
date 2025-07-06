@@ -12,11 +12,12 @@ public class RabbitMqConsumer : BackgroundService
 {
     private IConnection _connection;
     private IChannel _channel;
-    private readonly IMediator _mediator;
+    private IMediator _mediator;
+    private readonly IServiceProvider _serviceProvider;
 
-    public RabbitMqConsumer(IConfiguration config, IMediator mediator)
+    public RabbitMqConsumer(IConfiguration config, IServiceProvider serviceProvider)
     {
-        _mediator = mediator;
+        _serviceProvider = serviceProvider;
         Init(config).Wait();
     }
 
@@ -31,7 +32,9 @@ public class RabbitMqConsumer : BackgroundService
                       };
         _connection = await factory.CreateConnectionAsync();
         _channel = await _connection.CreateChannelAsync();
-        await _channel.QueueDeclareAsync("order_created", false, true, true);
+        await _channel.ExchangeDeclareAsync("order_created", ExchangeType.Fanout);
+        await _channel.QueueDeclareAsync("order_created_queue");
+        await _channel.QueueBindAsync("order_created_queue", "order_created", "");
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -43,6 +46,8 @@ public class RabbitMqConsumer : BackgroundService
         var consumer = new AsyncEventingBasicConsumer(_channel);
         consumer.ReceivedAsync += async (model, ea) =>
                                   {
+                                      using var scope = _serviceProvider.CreateScope();
+                                      _mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
                                       var body = ea.Body;
                                       var message = Encoding.UTF8.GetString(body.ToArray());
                                       var eventObj = JsonSerializer.Deserialize<OrderCreatedEvent>(message, jsonOpt);
@@ -52,12 +57,20 @@ public class RabbitMqConsumer : BackgroundService
                                           return;
                                       }
                                       var command = new HandleOrderCreatedCommand(eventObj.OrderId, eventObj.UserId, eventObj.TotalPrice);
-                                      var res = await _mediator.Send(command, stoppingToken);
-                                      if (!res.IsSuccess)
+                                      try
                                       {
-                                          await Console.Error.WriteLineAsync("Failed to process order");
+                                          var res = await _mediator.Send(command, stoppingToken);
+                                          if (!res.IsSuccess)
+                                          {
+                                              await Console.Error.WriteLineAsync("Failed to process order");
+                                          }
+                                      }
+                                      catch (Exception e)
+                                      {
+                                          Console.WriteLine(e);
+                                          throw;
                                       }
                                   };
-        await _channel.BasicConsumeAsync("order_created", true, consumer, stoppingToken);
+        await _channel.BasicConsumeAsync("order_created_queue", true, consumer, stoppingToken);
     }
 }

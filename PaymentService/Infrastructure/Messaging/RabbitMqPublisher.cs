@@ -26,8 +26,7 @@ public class RabbitMqPublisher : IEventPublisher
                       };
         _connection = await factory.CreateConnectionAsync();
         _channel = await _connection.CreateChannelAsync();
-        await _channel.ExchangeDeclareAsync("payment_completed", ExchangeType.Fanout, true);
-        await _channel.ExchangeDeclareAsync("payment_failed", ExchangeType.Fanout, true);
+        await _channel.ExchangeDeclareAsync("payment_processed", ExchangeType.Fanout);
     }
 
     public async Task PublishAsync<T>(T evt, string queueName)
@@ -40,7 +39,8 @@ public class RabbitMqPublisher : IEventPublisher
         var props = new BasicProperties()
                     {
                         Persistent = true,
+                        Type = queueName
                     };
-        await _channel.BasicPublishAsync(queueName, "", false, props, body);
+        await _channel.BasicPublishAsync("payment_processed", "payment_processed_queue", false, props, body);
     }
 }

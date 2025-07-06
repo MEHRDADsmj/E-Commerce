@@ -3,4 +3,4 @@ using Shared.Data;
 
 namespace OrderService.Application.Orders.Commands.MarkOrderAsPaid;
 
-public record MarkOrderAsPaidCommand(Guid Id) : IRequest<Result<bool>>;
+public record MarkOrderAsPaidCommand(Guid OrderId) : IRequest<Result<bool>>;
