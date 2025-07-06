@@ -27,6 +27,9 @@ public class RegisterUserHandlerTests
         _userRepositoryMock
             .Setup(repo => repo.GetByEmailAsync(command.Email))
             .ReturnsAsync(null as User);
+        _passwordHasherMock
+            .Setup(hasher => hasher.HashPassword(It.IsAny<string>()))
+            .ReturnsAsync("123");
         
         var result = await _handler.Handle(command, new CancellationToken());
         
@@ -41,7 +44,7 @@ public class RegisterUserHandlerTests
         var command = new RegisterUserCommand("test@test.com", "password", "John Doe");
         _userRepositoryMock
             .Setup(repo => repo.GetByEmailAsync(command.Email))
-            .ReturnsAsync(new User());
+            .ReturnsAsync(new User("123@123.com", "123", "John Doe"));
         
         var result = await _handler.Handle(command, new CancellationToken());
         

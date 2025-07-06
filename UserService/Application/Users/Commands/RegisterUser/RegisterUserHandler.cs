@@ -25,13 +25,7 @@ public class RegisterUserHandler : IRequestHandler<RegisterUserCommand, Result<G
             return Result<Guid>.Failure("User already exists");
         }
 
-        var newUser = new User()
-                      {
-                          Email = command.Email,
-                          FullName = command.FullName,
-                          HashedPassword = await _passwordHasher.HashPassword(command.Password),
-                          CreatedAt = DateTime.UtcNow,
-                      };
+        var newUser = new User(command.Email, await _passwordHasher.HashPassword(command.Password), command.FullName);
         await _userRepository.AddAsync(newUser);
         return Result<Guid>.Success(newUser.Id);
     }

@@ -10,6 +10,7 @@ public class UserRepositoryTests : IAsyncLifetime
 {
     private UserRepository _userRepository;
     private PostgreSqlContainer _dbContainer;
+    private User _user;
 
     public async Task InitializeAsync()
     {
@@ -22,40 +23,25 @@ public class UserRepositoryTests : IAsyncLifetime
         var dbContext = new UserDbContext(options.Options);
         await dbContext.Database.MigrateAsync();
         _userRepository = new UserRepository(dbContext);
+        _user = new User("test@test.com", "password", "John Doe");
     }
 
     [Fact]
     public async Task AddAsync_ShouldAddUser()
     {
-        var user = new User()
-                   {
-                       Email = "test@test.com",
-                       Id = Guid.NewGuid(),
-                       CreatedAt = DateTime.UtcNow,
-                       FullName = "John Doe",
-                       HashedPassword = "password",
-                   };
-        await _userRepository.AddAsync(user);
-        var result = await _userRepository.GetByIdAsync(user.Id);
+        await _userRepository.AddAsync(_user);
+        var result = await _userRepository.GetByIdAsync(_user.Id);
         Assert.NotNull(result);
-        Assert.Equal(user.Email, result.Email);
+        Assert.Equal(_user.Email, result.Email);
     }
 
     [Fact]
     public async Task GetByIdAsync_ShouldReturnUser()
     {
-        var user = new User()
-                   {
-                       Email = "test@test.com",
-                       Id = Guid.NewGuid(),
-                       CreatedAt = DateTime.UtcNow,
-                       FullName = "John Doe",
-                       HashedPassword = "password",
-                   };
-        await _userRepository.AddAsync(user);
-        var result = await _userRepository.GetByIdAsync(user.Id);
+        await _userRepository.AddAsync(_user);
+        var result = await _userRepository.GetByIdAsync(_user.Id);
         Assert.NotNull(result);
-        Assert.Equal(user.Id, result.Id);
+        Assert.Equal(_user.Id, result.Id);
     }
 
     [Fact]
@@ -68,18 +54,10 @@ public class UserRepositoryTests : IAsyncLifetime
     [Fact]
     public async Task GetByEmailAsync_ShouldReturnUser()
     {
-        var user = new User()
-                   {
-                       Email = "test@test.com",
-                       Id = Guid.NewGuid(),
-                       CreatedAt = DateTime.UtcNow,
-                       FullName = "John Doe",
-                       HashedPassword = "password",
-                   };
-        await _userRepository.AddAsync(user);
-        var result = await _userRepository.GetByEmailAsync(user.Email);
+        await _userRepository.AddAsync(_user);
+        var result = await _userRepository.GetByEmailAsync(_user.Email);
         Assert.NotNull(result);
-        Assert.Equal(user.Email, result.Email);
+        Assert.Equal(_user.Email, result.Email);
     }
 
     [Fact]

@@ -32,7 +32,7 @@ public class LoginUserHandlerTests
         var command = new LoginUserCommand("test@test.com", "password");
         _userRepository
             .Setup(repo => repo.GetByEmailAsync(command.Email))
-            .ReturnsAsync(new User() { HashedPassword = "123", Email = command.Email });
+            .ReturnsAsync(new User(command.Email, "123", ""));
         _passwordHasher
             .Setup(hasher => hasher.VerifyHash("123", command.Password))
             .ReturnsAsync(true);
@@ -57,7 +57,7 @@ public class LoginUserHandlerTests
         var command = new LoginUserCommand("test@test.com", "password");
         _userRepository
             .Setup(repo => repo.GetByEmailAsync(command.Email))
-            .ReturnsAsync(new User() { HashedPassword = "123", Email = command.Email });
+            .ReturnsAsync(new User(command.Email, "123", ""));
         _passwordHasher
             .Setup(hasher => hasher.VerifyHash("123", command.Password))
             .ReturnsAsync(false);
