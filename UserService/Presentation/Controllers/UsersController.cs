@@ -6,7 +6,7 @@ using UserService.Application.Users.Commands.LoginUser;
 using UserService.Application.Users.Commands.RegisterUser;
 using UserService.Presentation.DTOs;
 
-namespace UserService.Controllers;
+namespace UserService.Presentation.Controllers;
 
 [Authorize]
 [Route("api/[controller]")]
@@ -27,7 +27,7 @@ public class UsersController : ControllerBase
         return Ok("Users Healthy");
     }
 
-    [HttpGet("user/{userId}")]
+    [HttpGet("user/{userId:guid}")]
     public async Task<IActionResult> GetUserProfile(Guid userId)
     {
         var command = new GetUserProfileQuery(userId);
