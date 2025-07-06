@@ -82,7 +82,7 @@ public class LoginUserHandlerTests
         var command = new LoginUserCommand("test@test.com", "password");
         _userRepository
             .Setup(repo => repo.GetByEmailAsync(command.Email))
-            .ReturnsAsync(null as User);
+            .ReturnsAsync(User.Empty);
         _passwordHasher
             .Setup(hasher => hasher.HashPassword(command.Password))
             .ReturnsAsync("123");

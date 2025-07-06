@@ -16,7 +16,7 @@ public class GetUserProfileHandler : IRequestHandler<GetUserProfileQuery, Result
     public async Task<Result<GetUserProfileResult>> Handle(GetUserProfileQuery query, CancellationToken cancellationToken)
     {
         var user = await _userRepository.GetByIdAsync(query.UserId);
-        if (user == null)
+        if (user.IsEmpty())
         {
             return Result<GetUserProfileResult>.Failure("User not found");
         }
