@@ -6,7 +6,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using UserService.Application.Interfaces;
-using UserService.Data;
 using UserService.Domain.Interfaces;
 using UserService.Infrastructure;
 using UserService.Infrastructure.Repositories;

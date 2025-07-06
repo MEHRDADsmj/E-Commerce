@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Testcontainers.PostgreSql;
-using UserService.Data;
 using UserService.Domain.Entities;
+using UserService.Infrastructure;
 using UserService.Infrastructure.Repositories;
 
 namespace Tests.UserService;

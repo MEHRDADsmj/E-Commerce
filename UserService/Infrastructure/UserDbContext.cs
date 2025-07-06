@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using UserService.Domain.Entities;
 
-namespace UserService.Data;
+namespace UserService.Infrastructure;
 
 public class UserDbContext : DbContext
 {
@@ -10,5 +10,5 @@ public class UserDbContext : DbContext
         
     }
     
-    public DbSet<User> Users { get; set; }
+    public DbSet<User> Users { get; init; }
 }
