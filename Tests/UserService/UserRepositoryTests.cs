@@ -48,7 +48,7 @@ public class UserRepositoryTests : IAsyncLifetime
     public async Task GetByIdAsync_ShouldReturnNull()
     {
         var result = await _userRepository.GetByIdAsync(Guid.NewGuid());
-        Assert.Null(result);
+        Assert.True(result.IsEmpty());
     }
 
     [Fact]
