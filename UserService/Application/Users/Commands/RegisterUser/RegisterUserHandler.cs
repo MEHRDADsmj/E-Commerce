@@ -20,7 +20,7 @@ public class RegisterUserHandler : IRequestHandler<RegisterUserCommand, Result<G
     public async Task<Result<Guid>> Handle(RegisterUserCommand command, CancellationToken cancellationToken)
     {
         var user = await _userRepository.GetByEmailAsync(command.Email);
-        if (user != null)
+        if (!user.IsEmpty())
         {
             return Result<Guid>.Failure("User already exists");
         }

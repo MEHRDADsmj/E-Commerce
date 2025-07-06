@@ -26,7 +26,7 @@ public class RegisterUserHandlerTests
         var command = new RegisterUserCommand("test@test.com", "password", "John Doe");
         _userRepositoryMock
             .Setup(repo => repo.GetByEmailAsync(command.Email))
-            .ReturnsAsync(null as User);
+            .ReturnsAsync(User.Empty);
         _passwordHasherMock
             .Setup(hasher => hasher.HashPassword(It.IsAny<string>()))
             .ReturnsAsync("123");

@@ -64,7 +64,7 @@ public class UserRepositoryTests : IAsyncLifetime
     public async Task GetByEmailAsync_ShouldReturnNull()
     {
         var result = await _userRepository.GetByEmailAsync("test@test.com");
-        Assert.Null(result);
+        Assert.True(result.IsEmpty());
     }
 
     public Task DisposeAsync()
