@@ -21,7 +21,7 @@ public class UserRepository : IUserRepository
 
     public async Task<User> GetByEmailAsync(string email)
     {
-        var user = await _context.Users.FirstOrDefaultAsync(user => user.Email == email) ?? User.Empty();
+        var user = await _context.Users.FirstOrDefaultAsync(user => user.Email.ToUpper() == email.ToUpper()) ?? User.Empty();
         return user;
     }
 
