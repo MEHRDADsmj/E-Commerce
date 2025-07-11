@@ -55,15 +55,14 @@ public class UsersController : ControllerBase
     }
 
     [AllowAnonymous]
-    [HttpPost("register")]
-    public async Task<IActionResult> Register(RegisterUserRequestDto dto)
+    [HttpPut("register")]
+    public async Task<ActionResult> Register(RegisterUserRequestDto dto)
     {
         var command = new RegisterUserCommand(dto.Email, dto.Password, dto.FullName);
         var result = await _mediator.Send(command);
         if (result.IsSuccess)
         {
-            var resp = new RegisterUserResponseDto(result.Value, dto.Email);
-            return Ok(resp);
+            return CreatedAtAction(actionName: "Register", string.Empty);
         }
         return BadRequest(result.ErrorMessage);
     }
