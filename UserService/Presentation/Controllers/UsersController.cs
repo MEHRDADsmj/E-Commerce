@@ -28,7 +28,7 @@ public class UsersController : ControllerBase
     }
 
     [HttpGet("user/{userId:guid}")]
-    public async Task<IActionResult> GetUserProfile([FromRoute] Guid userId)
+    public async Task<ActionResult<GetUserProfileResponseDto>> GetUserProfile([FromRoute] Guid userId)
     {
         var command = new GetUserProfileQuery(userId);
         var result = await _mediator.Send(command);
@@ -42,7 +42,7 @@ public class UsersController : ControllerBase
 
     [AllowAnonymous]
     [HttpPost("login")]
-    public async Task<IActionResult> Login([FromBody] LoginUserRequestDto dto)
+    public async Task<ActionResult<LoginUserResponseDto>> Login([FromBody] LoginUserRequestDto dto)
     {
         var command = new LoginUserCommand(dto.Email, dto.Password);
         var result = await _mediator.Send(command);
@@ -56,7 +56,7 @@ public class UsersController : ControllerBase
 
     [AllowAnonymous]
     [HttpPut("register")]
-    public async Task<ActionResult> Register([FromBody] RegisterUserRequestDto dto)
+    public async Task<IActionResult> Register([FromBody] RegisterUserRequestDto dto)
     {
         var command = new RegisterUserCommand(dto.Email, dto.Password, dto.FullName);
         var result = await _mediator.Send(command);
