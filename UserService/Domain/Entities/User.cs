@@ -4,8 +4,8 @@ namespace UserService.Domain.Entities;
 
 public class User
 {
-    [Key] public Guid Id { get; private set; }
-    [Required][EmailAddress] public string Email { get; private set; }
+    [Key] public Guid Id { get; private init; }
+    [Required, EmailAddress] public string Email { get; private set; }
     [Required] public string HashedPassword { get; private set; }
     [Length(0, 50)] public string FullName { get; private set; }
     public DateTime CreatedAt { get; private set; }

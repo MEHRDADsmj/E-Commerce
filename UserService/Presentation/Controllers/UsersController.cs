@@ -28,13 +28,13 @@ public class UsersController : ControllerBase
     }
 
     [HttpGet("user/{userId:guid}")]
-    public async Task<IActionResult> GetUserProfile(Guid userId)
+    public async Task<IActionResult> GetUserProfile([FromRoute] Guid userId)
     {
         var command = new GetUserProfileQuery(userId);
         var result = await _mediator.Send(command);
         if (result.IsSuccess)
         {
-            var resp = new GetUserProfileResponseDto(result.Value.Email, result.Value.FullName);
+            var resp = new GetUserProfileResponseDto(result.Value!.Email, result.Value.FullName);
             return Ok(resp);
         }
         return BadRequest(result.ErrorMessage);
@@ -42,13 +42,13 @@ public class UsersController : ControllerBase
 
     [AllowAnonymous]
     [HttpPost("login")]
-    public async Task<IActionResult> Login(LoginUserRequestDto dto)
+    public async Task<IActionResult> Login([FromBody] LoginUserRequestDto dto)
     {
         var command = new LoginUserCommand(dto.Email, dto.Password);
         var result = await _mediator.Send(command);
         if (result.IsSuccess)
         {
-            var resp = new LoginUserResponseDto(result.Value.Id, result.Value.Email, result.Value.Token);
+            var resp = new LoginUserResponseDto(result.Value!.Id, result.Value.Token);
             return Ok(resp);
         }
         return BadRequest(result.ErrorMessage);
@@ -56,7 +56,7 @@ public class UsersController : ControllerBase
 
     [AllowAnonymous]
     [HttpPut("register")]
-    public async Task<ActionResult> Register(RegisterUserRequestDto dto)
+    public async Task<ActionResult> Register([FromBody] RegisterUserRequestDto dto)
     {
         var command = new RegisterUserCommand(dto.Email, dto.Password, dto.FullName);
         var result = await _mediator.Send(command);

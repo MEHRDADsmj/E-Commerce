@@ -4,16 +4,15 @@ namespace UserService.Presentation.DTOs;
 
 public class RegisterUserRequestDto
 {
-    [EmailAddress] public required string Email { get; init; }
-    public required string Password { get; init; }
-    [Length(1, 64)] public required string FullName { get; init; }
+    [Required, EmailAddress, StringLength(64)] public string Email { get; }
+    [Required, StringLength(64)] public string Password { get; }
+    [Required, StringLength(64)] public string FullName { get; }
 
     public RegisterUserRequestDto(string email, string password, string fullName)
     {
-        Email = email;
+        var parts = email.Split("@");
+        Email = parts[0].Trim().Replace(".", "") + "@" + parts[1];
         Password = password;
         FullName = fullName;
-        ValidationContext validationContext = new ValidationContext(this);
-        Validator.ValidateObject(this, validationContext, true);
     }
 }
