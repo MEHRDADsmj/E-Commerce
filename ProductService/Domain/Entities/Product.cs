@@ -8,13 +8,18 @@ public class Product
     [Required, StringLength(64)] public string Name { get; private set; }
     [StringLength(256)] public string? Description { get; private set; }
     [Required, Range(0, double.MaxValue)] public decimal UnitPrice { get; private set; }
+    
+    public bool IsEmpty() => Id == Guid.Empty;
 
     public static Product Empty()
     {
-        return new Product("Null", 0, "Null");
+        return new Product("null", 0, "null")
+               {
+                   Id = Guid.Empty
+               };
     }
 
-    public Product() : this("Null", 0, "Null")
+    public Product() : this("null", 0, "null")
     {
         
     }
@@ -29,10 +34,10 @@ public class Product
         Validator.ValidateObject(this, validationContext, true);
     }
 
-    public void Update(Product product)
+    public void Update(ProductDto product)
     {
-        Name = product.Name;
-        Description = product.Description;
-        UnitPrice = product.UnitPrice;
+        Name = product.Name ?? Name;
+        Description = product.Description ?? Description;
+        UnitPrice = product.UnitPrice ?? UnitPrice;
     }
 }

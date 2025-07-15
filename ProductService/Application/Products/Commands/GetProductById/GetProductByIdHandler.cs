@@ -17,7 +17,7 @@ public class GetProductByIdHandler : IRequestHandler<GetProductByIdQuery, Result
     public async Task<Result<Product>> Handle(GetProductByIdQuery request, CancellationToken cancellationToken)
     {
         var product = await _productRepository.GetByIdAsync(request.Id);
-        if (product == null)
+        if (product.IsEmpty())
         {
             return Result<Product>.Failure("Product not found");
         }

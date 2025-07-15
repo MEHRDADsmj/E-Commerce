@@ -38,7 +38,7 @@ public class ProductRepository : IProductRepository
         {
             throw new KeyNotFoundException();
         }
-        foundProduct.Update(product.ToProduct());
+        foundProduct.Update(product);
         await _context.SaveChangesAsync();
         return foundProduct;
     }

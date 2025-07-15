@@ -17,7 +17,7 @@ public class UpdateProductHandler : IRequestHandler<UpdateProductCommand, Result
     public async Task<Result<Product>> Handle(UpdateProductCommand request, CancellationToken cancellationToken)
     {
         var oldProduct = await _productRepository.GetByIdAsync(request.Product.Id);
-        if (oldProduct == null)
+        if (oldProduct.IsEmpty())
         {
             return Result<Product>.Failure("Product not found");
         }

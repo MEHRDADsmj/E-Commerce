@@ -45,8 +45,8 @@ public class ProductsController : ControllerBase
         return BadRequest(result.ErrorMessage);
     }
 
-    [HttpPost("update")]
-    public async Task<IActionResult> UpdateProduct(UpdateProductRequestDto dto)
+    [HttpPatch("update")]
+    public async Task<ActionResult<UpdateProductResponseDto>> UpdateProduct([FromBody] UpdateProductRequestDto dto)
     {
         var productDto = new ProductDto(dto.Id, dto.Name, dto.UnitPrice, dto.Description);
         var command = new UpdateProductCommand(productDto);
@@ -54,7 +54,7 @@ public class ProductsController : ControllerBase
 
         if (result.IsSuccess)
         {
-            var resp = new UpdateProductResponseDto(result.Value.Id, result.Value.Name, result.Value.UnitPrice,
+            var resp = new UpdateProductResponseDto(result.Value!.Id, result.Value.Name, result.Value.UnitPrice,
                                                     result.Value.Description);
             return Ok(resp);
         }
