@@ -105,14 +105,15 @@ public class ProductsController : ControllerBase
     }
 
     [HttpPost("bulk")]
-    public async Task<IActionResult> GetProductsBulk(GetProductsBulkRequestDto dto)
+    public async Task<ActionResult<GetProductsBulkResponseDto>> GetProductsBulk([FromBody] GetProductsBulkRequestDto dto)
     {
         var query = new GetProductsBulkQuery(dto.ProductIds);
         var result = await _mediator.Send(query);
 
         if (result.IsSuccess)
         {
-            return Ok(result.Value);
+            var resp = new GetProductsBulkResponseDto(result.Value!);
+            return Ok(resp);
         }
         return BadRequest(result.ErrorMessage);
     }

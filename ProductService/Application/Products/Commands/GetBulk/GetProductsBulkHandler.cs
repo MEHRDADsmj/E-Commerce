@@ -21,8 +21,8 @@ public class GetProductsBulkHandler : IRequestHandler<GetProductsBulkQuery, Resu
             return Result<IEnumerable<Product>>.Failure("No Ids provided");
         }
         var products = await _productRepository.GetBulkAsync(request.Products);
-        var enumerable = products.ToList();
-        if (enumerable.Count == 0)
+        var enumerable = products as Product[] ?? products.ToArray();
+        if (enumerable.Length == 0)
         {
             return Result<IEnumerable<Product>>.Failure("No Products found");
         }

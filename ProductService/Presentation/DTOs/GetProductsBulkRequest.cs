@@ -1,3 +1,3 @@
 ﻿namespace ProductService.Presentation.DTOs;
 
-public record GetProductsBulkRequestDto(List<Guid> ProductIds);
+public record GetProductsBulkRequestDto(IEnumerable<Guid> ProductIds);
