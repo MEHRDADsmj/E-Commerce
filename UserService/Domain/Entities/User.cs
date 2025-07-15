@@ -5,9 +5,9 @@ namespace UserService.Domain.Entities;
 public class User
 {
     [Key] public Guid Id { get; private init; }
-    [Required, EmailAddress] public string Email { get; private set; }
-    [Required] public string HashedPassword { get; private set; }
-    [Length(0, 50)] public string FullName { get; private set; }
+    [Required, EmailAddress, StringLength(64)] public string Email { get; private set; }
+    [Required, StringLength(1024)] public string HashedPassword { get; private set; }
+    [StringLength(50)] public string FullName { get; private set; }
     public DateTime CreatedAt { get; private set; }
     
     public bool IsEmpty() => Id == Guid.Empty;
