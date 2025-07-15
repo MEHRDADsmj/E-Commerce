@@ -1,7 +1,7 @@
 ﻿using Bogus;
 using FluentAssertions;
 using Moq;
-using ProductService.Application.Products.Commands.GetProductsPaginated;
+using ProductService.Application.Products.Queries.GetProductsPaginated;
 using ProductService.Domain.Entities;
 using ProductService.Domain.Interfaces;
 

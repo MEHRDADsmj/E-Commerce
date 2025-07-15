@@ -1,7 +1,7 @@
 ﻿using Bogus;
 using FluentAssertions;
 using Moq;
-using ProductService.Application.Products.Commands.GetBulk;
+using ProductService.Application.Products.Queries.GetBulk;
 using ProductService.Domain.Entities;
 using ProductService.Domain.Interfaces;
 

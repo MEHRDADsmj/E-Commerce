@@ -5,8 +5,8 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using ProductService.Data;
 using ProductService.Domain.Interfaces;
+using ProductService.Infrastructure;
 using ProductService.Infrastructure.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);

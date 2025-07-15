@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ProductService.Domain.Entities;
 
-namespace ProductService.Data;
+namespace ProductService.Infrastructure;
 
 public class ProductDbContext : DbContext
 {

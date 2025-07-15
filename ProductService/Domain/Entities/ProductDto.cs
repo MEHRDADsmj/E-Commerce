@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace ProductService.Domain.Entities;
+﻿namespace ProductService.Domain.Entities;
 
 public class ProductDto
 {

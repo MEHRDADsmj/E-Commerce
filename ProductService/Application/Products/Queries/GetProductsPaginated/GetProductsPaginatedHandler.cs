@@ -3,7 +3,7 @@ using ProductService.Domain.Entities;
 using ProductService.Domain.Interfaces;
 using Shared.Data;
 
-namespace ProductService.Application.Products.Commands.GetProductsPaginated;
+namespace ProductService.Application.Products.Queries.GetProductsPaginated;
 
 public class GetProductsPaginatedHandler : IRequestHandler<GetProductsPaginatedQuery, Result<IEnumerable<Product>>>
 {

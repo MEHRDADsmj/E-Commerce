@@ -4,10 +4,10 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ProductService.Application.Products.Commands.AddProduct;
 using ProductService.Application.Products.Commands.DeleteProduct;
-using ProductService.Application.Products.Commands.GetBulk;
-using ProductService.Application.Products.Commands.GetProductById;
-using ProductService.Application.Products.Commands.GetProductsPaginated;
 using ProductService.Application.Products.Commands.UpdateProduct;
+using ProductService.Application.Products.Queries.GetBulk;
+using ProductService.Application.Products.Queries.GetProductById;
+using ProductService.Application.Products.Queries.GetProductsPaginated;
 using ProductService.Domain.Entities;
 using ProductService.Presentation.DTOs;
 

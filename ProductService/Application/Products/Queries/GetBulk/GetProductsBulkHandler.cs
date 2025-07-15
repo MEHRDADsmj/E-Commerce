@@ -3,7 +3,7 @@ using ProductService.Domain.Entities;
 using ProductService.Domain.Interfaces;
 using Shared.Data;
 
-namespace ProductService.Application.Products.Commands.GetBulk;
+namespace ProductService.Application.Products.Queries.GetBulk;
 
 public class GetProductsBulkHandler : IRequestHandler<GetProductsBulkQuery, Result<IEnumerable<Product>>>
 {

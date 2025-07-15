@@ -3,7 +3,7 @@ using ProductService.Domain.Entities;
 using ProductService.Domain.Interfaces;
 using Shared.Data;
 
-namespace ProductService.Application.Products.Commands.GetProductById;
+namespace ProductService.Application.Products.Queries.GetProductById;
 
 public class GetProductByIdHandler : IRequestHandler<GetProductByIdQuery, Result<Product>>
 {

@@ -1,6 +1,6 @@
 ﻿using FluentAssertions;
 using Moq;
-using ProductService.Application.Products.Commands.GetProductById;
+using ProductService.Application.Products.Queries.GetProductById;
 using ProductService.Domain.Entities;
 using ProductService.Domain.Interfaces;
 
