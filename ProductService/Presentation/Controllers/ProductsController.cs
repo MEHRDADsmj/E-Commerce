@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using System.ComponentModel.DataAnnotations;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using ProductService.Application.Products.Commands.AddProduct;
@@ -75,14 +76,16 @@ public class ProductsController : ControllerBase
     }
 
     [HttpGet()]
-    public async Task<IActionResult> GetAllProducts([FromQuery] int page = 1, [FromQuery(Name = "page_size")] int pageSize = 10)
+    public async Task<IActionResult> GetAllProducts([FromQuery, Range(1, int.MaxValue)] int page = 1, 
+                                                    [FromQuery(Name = "page_size"), Range(1, int.MaxValue)] int pageSize = 10)
     {
         var query = new GetProductsPaginatedQuery(page, pageSize);
         var result = await _mediator.Send(query);
 
         if (result.IsSuccess)
         {
-            return Ok(result.Value);
+            var resp = new GetProductsPaginatedResponseDto(result.Value);
+            return Ok(resp);
         }
         return BadRequest(result.ErrorMessage);
     }
