@@ -62,14 +62,14 @@ public class ProductsController : ControllerBase
     }
 
     [HttpDelete("delete")]
-    public async Task<IActionResult> DeleteProduct(DeleteProductRequestDto dto)
+    public async Task<IActionResult> DeleteProduct([FromBody] DeleteProductRequestDto dto)
     {
         var command = new DeleteProductCommand(dto.Id);
         var result = await _mediator.Send(command);
 
         if (result.IsSuccess)
         {
-            return Ok();
+            return NoContent();
         }
         return BadRequest(result.ErrorMessage);
     }
