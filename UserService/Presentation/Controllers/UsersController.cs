@@ -1,9 +1,9 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using UserService.Application.Users.Commands.GetUserProfile;
 using UserService.Application.Users.Commands.LoginUser;
 using UserService.Application.Users.Commands.RegisterUser;
+using UserService.Application.Users.Queries.GetUserProfile;
 using UserService.Presentation.DTOs;
 
 namespace UserService.Presentation.Controllers;

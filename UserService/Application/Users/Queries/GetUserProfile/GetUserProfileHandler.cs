@@ -2,7 +2,7 @@
 using Shared.Data;
 using UserService.Domain.Interfaces;
 
-namespace UserService.Application.Users.Commands.GetUserProfile;
+namespace UserService.Application.Users.Queries.GetUserProfile;
 
 public class GetUserProfileHandler : IRequestHandler<GetUserProfileQuery, Result<GetUserProfileResult>>
 {
