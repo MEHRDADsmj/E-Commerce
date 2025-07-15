@@ -90,15 +90,16 @@ public class ProductsController : ControllerBase
         return BadRequest(result.ErrorMessage);
     }
 
-    [HttpGet("{id}")]
-    public async Task<IActionResult> GetProductById(Guid id)
+    [HttpGet("{id:guid}")]
+    public async Task<ActionResult<GetProductsPaginatedResponseDto>> GetProductById([FromRoute] Guid id)
     {
         var query = new GetProductByIdQuery(id);
         var result = await _mediator.Send(query);
 
         if (result.IsSuccess)
         {
-            return Ok(result.Value);
+            var resp = new GetProductByIdResponseDto(result.Value!);
+            return Ok(resp);
         }
         return BadRequest(result.ErrorMessage);
     }
