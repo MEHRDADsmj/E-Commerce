@@ -14,9 +14,9 @@ public class ProductRepository : IProductRepository
         _context = context;
     }
     
-    public async Task<Product?> GetByIdAsync(Guid id)
+    public async Task<Product> GetByIdAsync(Guid id)
     {
-        return await _context.Products.FirstOrDefaultAsync(product => product.Id == id);
+        return await _context.Products.FirstOrDefaultAsync(product => product.Id == id) ?? Product.Empty();
     }
 
     public async Task<List<Product>> GetAllAsync(int page, int pageSize)
