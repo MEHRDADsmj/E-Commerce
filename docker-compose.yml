@@ -9,7 +9,7 @@ services:
     ports:
       - "5202:80"
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_ENVIRONMENT=Production
       - ConnectionStrings__DefaultConnection=Host=postgres;Database=ecommercedb;Username=postgres;Password=postgres
     depends_on:
       - postgres
@@ -24,7 +24,7 @@ services:
     ports:
       - "5176:80"
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_ENVIRONMENT=Production
       - ConnectionStrings__DefaultConnection=Host=postgres;Database=ecommercedb;Username=postgres;Password=postgres
     networks:
       - backend
@@ -37,7 +37,7 @@ services:
     ports:
       - "5259:80"
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_ENVIRONMENT=Production
       - Redis__Host=redis
       - Redis__Port=6379
     depends_on:
@@ -53,7 +53,7 @@ services:
     ports:
       - "5199:80"
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_ENVIRONMENT=Production
       - RabbitMQ__Host=rabbitmq
     depends_on:
       - rabbitmq
@@ -68,7 +68,7 @@ services:
     ports:
       - "5208:80"
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_ENVIRONMENT=Production
       - RabbitMQ__Host=rabbitmq
       - RabbitMQ__Port=5672
       - RabbitMQ__User=guest
