@@ -38,9 +38,7 @@ public class ProductRepository : IProductRepository
         {
             throw new KeyNotFoundException();
         }
-        foundProduct.Name = product.Name;
-        foundProduct.Description = product.Description;
-        foundProduct.UnitPrice = product.UnitPrice;
+        foundProduct.Update(product.ToProduct());
         await _context.SaveChangesAsync();
         return foundProduct;
     }

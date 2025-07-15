@@ -25,7 +25,7 @@ public class AddProductHandlerTests
             .Setup(repo => repo.AddAsync(It.IsAny<Product>()))
             .Returns(Task.CompletedTask);
 
-        var command = new AddProductCommand(new Faker().Random.String(), new Faker().Random.Decimal(),
+        var command = new AddProductCommand(new Faker().Random.String(64), new Faker().Random.Decimal(),
                                             new Faker().Random.String());
         var res = await _handler.Handle(command, CancellationToken.None);
 
@@ -40,7 +40,7 @@ public class AddProductHandlerTests
             .Setup(repo => repo.AddAsync(It.IsAny<Product>()))
             .ThrowsAsync(new Exception("Something went wrong"));
         
-        var command = new AddProductCommand(new Faker().Random.String(), new Faker().Random.Decimal(),
+        var command = new AddProductCommand(new Faker().Random.String(64), new Faker().Random.Decimal(),
                                             new Faker().Random.String());
         var res = await _handler.Handle(command, CancellationToken.None);
         

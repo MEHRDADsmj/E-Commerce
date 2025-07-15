@@ -23,10 +23,10 @@ public class UpdateProductHandlerTests
     {
         _repositoryMock
             .Setup(repo => repo.GetByIdAsync(It.IsAny<Guid>()))
-            .ReturnsAsync(new Product());
+            .ReturnsAsync(Product.Empty);
         _repositoryMock
             .Setup(repo => repo.UpdateAsync(It.IsAny<ProductDto>()))
-            .ReturnsAsync(new Product());
+            .ReturnsAsync(Product.Empty);
 
         var command = new UpdateProductCommand(new ProductDto(Guid.NewGuid(), new Faker().Random.Word(),
                                                               new Faker().Random.Decimal(), new Faker().Random.Word()));
@@ -42,7 +42,7 @@ public class UpdateProductHandlerTests
     {
         _repositoryMock
             .Setup(repo => repo.GetByIdAsync(It.IsAny<Guid>()))
-            .ReturnsAsync(new Product());
+            .ReturnsAsync(Product.Empty);
         _repositoryMock
             .Setup(repo => repo.UpdateAsync(It.IsAny<ProductDto>()))
             .ThrowsAsync(new Exception("Something went wrong"));
