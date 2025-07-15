@@ -31,16 +31,16 @@ public class ProductsController : ControllerBase
         return Ok("Products Healthy");
     }
 
-    [HttpPost("add")]
-    public async Task<IActionResult> AddProduct(AddProductRequestDto dto)
+    [HttpPut("add")]
+    public async Task<ActionResult<AddProductResponseDto>> AddProduct([FromBody] AddProductRequestDto dto)
     {
         var command = new AddProductCommand(dto.Name, dto.UnitPrice, dto.Description);
         var result = await _mediator.Send(command);
 
         if (result.IsSuccess)
         {
-            var resp = new AddProductResponseDto(result.Value.Id, result.Value.Name, result.Value.UnitPrice);
-            return Ok(resp);
+            var resp = new AddProductResponseDto(result.Value!.Id, result.Value.Name, result.Value.UnitPrice);
+            return CreatedAtAction("AddProduct", resp);
         }
         return BadRequest(result.ErrorMessage);
     }
