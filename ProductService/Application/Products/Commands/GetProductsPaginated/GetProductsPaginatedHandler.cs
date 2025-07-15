@@ -21,10 +21,11 @@ public class GetProductsPaginatedHandler : IRequestHandler<GetProductsPaginatedQ
             return Result<IEnumerable<Product>>.Failure("Page and page size must be greater than 0");
         }
         var products = await _productRepository.GetAllAsync(request.Page, request.PageSize);
-        if (products.Count == 0)
+        var enumerable = products as Product[] ?? products.ToArray();
+        if (enumerable.Length == 0)
         {
             return Result<IEnumerable<Product>>.Failure("No products found on this page");
         }
-        return Result<IEnumerable<Product>>.Success(products);
+        return Result<IEnumerable<Product>>.Success(enumerable);
     }
 }

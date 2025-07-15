@@ -19,10 +19,10 @@ public class ProductRepository : IProductRepository
         return await _context.Products.FirstOrDefaultAsync(product => product.Id == id) ?? Product.Empty();
     }
 
-    public async Task<List<Product>> GetAllAsync(int page, int pageSize)
+    public async Task<IEnumerable<Product>> GetAllAsync(int page, int pageSize)
     {
         await Task.CompletedTask;
-        return _context.Products.Skip((page - 1) * pageSize).Take(pageSize).ToList();
+        return _context.Products.Skip((page - 1) * pageSize).Take(pageSize);
     }
 
     public async Task AddAsync(Product product)

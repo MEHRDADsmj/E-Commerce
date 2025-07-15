@@ -5,7 +5,7 @@ namespace ProductService.Domain.Interfaces;
 public interface IProductRepository
 {
     Task<Product> GetByIdAsync(Guid id);
-    Task<List<Product>> GetAllAsync(int page, int pageSize);
+    Task<IEnumerable<Product>> GetAllAsync(int page, int pageSize);
     Task AddAsync(Product product);
     Task<Product> UpdateAsync(ProductDto product);
     Task DeleteAsync(Guid id);
