@@ -33,8 +33,8 @@ public class ProductRepository : IProductRepository
 
     public async Task<Product> UpdateAsync(ProductDto product)
     {
-        var foundProduct = await _context.Products.FirstOrDefaultAsync(p => p.Id == product.Id);
-        if (foundProduct == null)
+        var foundProduct = await GetByIdAsync(product.Id);
+        if (foundProduct.IsEmpty())
         {
             throw new KeyNotFoundException();
         }
@@ -45,8 +45,8 @@ public class ProductRepository : IProductRepository
 
     public async Task DeleteAsync(Guid id)
     {
-        var product = await _context.Products.FirstOrDefaultAsync(product => product.Id == id);
-        if (product != null)
+        var product = await GetByIdAsync(id);
+        if (!product.IsEmpty())
         {
             _context.Products.Remove(product);
         }

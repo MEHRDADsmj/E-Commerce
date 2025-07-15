@@ -22,7 +22,7 @@ public class GetProductByIdHandlerTests
     {
         _repositoryMock
             .Setup(repo => repo.GetByIdAsync(It.IsAny<Guid>()))
-            .ReturnsAsync(Product.Empty);
+            .ReturnsAsync(new Product());
 
         var query = new GetProductByIdQuery(Guid.NewGuid());
         var result = await _handler.Handle(query, CancellationToken.None);
