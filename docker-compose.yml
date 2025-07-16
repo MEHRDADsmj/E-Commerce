@@ -55,8 +55,10 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
       - RabbitMQ__Host=rabbitmq
+      - ConnectionStrings__DefaultConnection=Host=postgres;Database=ecommercedb;Username=postgres;Password=postgres
     depends_on:
-      - rabbitmq
+      rabbitmq:
+        condition: service_healthy
     networks:
       - backend
   
@@ -74,7 +76,8 @@ services:
       - RabbitMQ__User=guest
       - RabbitMQ__Password=guest
     depends_on:
-      - rabbitmq
+      rabbitmq:
+        condition: service_healthy
     networks:
       - backend
   
@@ -106,6 +109,11 @@ services:
   rabbitmq:
     image: rabbitmq:3-management
     restart: always
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "check_running"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
     ports:
       - "5672:5672" # Main RabbitMQ connection
       - "15672:15672" # RabbitMQ management dashboard
