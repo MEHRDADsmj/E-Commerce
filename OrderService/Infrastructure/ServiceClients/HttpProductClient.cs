@@ -1,4 +1,5 @@
-﻿using System.Net.Http.Headers;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Net.Http.Headers;
 using System.Text.Json;
 using OrderService.Application.Interfaces;
 using OrderService.Contracts.DTOs;
@@ -25,6 +26,20 @@ public class HttpProductClient : IProductClient
         var products = new ProductIdsDto(productIds);
         var response = await _httpClient.PostAsJsonAsync("products/bulk", products, opt);
         response.EnsureSuccessStatusCode();
-        return await response.Content.ReadFromJsonAsync<IEnumerable<ProductInfo>>(opt) ?? Array.Empty<ProductInfo>();
+        try
+        {
+            var dto = await response.Content.ReadFromJsonAsync<ProductsBulkDto>(opt);
+            return dto == null ? Array.Empty<ProductInfo>() : dto.Products;
+        }
+        catch (ValidationException e)
+        {
+            Console.WriteLine(e);
+            return Array.Empty<ProductInfo>();
+        }
+    }
+
+    private class ProductsBulkDto
+    {
+        public IEnumerable<ProductInfo> Products { get; set; }
     }
 }

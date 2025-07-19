@@ -27,8 +27,8 @@ public class OrdersController : ControllerBase
         return Ok("Orders Healthy");
     }
 
-    [HttpPost("create")]
-    public async Task<IActionResult> CreateOrder()
+    [HttpPut("create")]
+    public async Task<ActionResult<CreateOrderResponseDto>> CreateOrder()
     {
         var userId = HttpContext.User.Claims.FirstOrDefault(claim => claim.Type == "user_id")?.Value;
         if (userId == null)
@@ -43,7 +43,7 @@ public class OrdersController : ControllerBase
         if (result.IsSuccess)
         {
             var dto = new CreateOrderResponseDto(result.Value);
-            return Ok(dto);
+            return CreatedAtAction("CreateOrder", dto);
         }
         return BadRequest(result.ErrorMessage);
     }
