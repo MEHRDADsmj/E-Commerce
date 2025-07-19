@@ -31,14 +31,14 @@ public class CreateOrderHandlerTests
     [Fact]
     public async Task Handle_ShouldReturnFalse_WhenCartIsNull()
     {
-        _cartClientMock.Setup(client => client.GetCartAsync(It.IsAny<Guid>(), It.IsAny<string>()))
-                       .ReturnsAsync(null as Cart);
+        _cartClientMock.Setup(client => client.GetCartAsync(It.IsAny<string>()))
+                       .ReturnsAsync(Cart.Empty);
 
         var command = new CreateOrderCommand(Guid.NewGuid(), new Faker().Random.String());
         var result = await _handler.Handle(command, CancellationToken.None);
 
         result.IsSuccess.Should().BeFalse();
-        _cartClientMock.Verify(client => client.GetCartAsync(It.IsAny<Guid>(), It.IsAny<string>()), Times.Once);
+        _cartClientMock.Verify(client => client.GetCartAsync(It.IsAny<string>()), Times.Once);
         _orderRepositoryMock.VerifyNoOtherCalls();
         _eventPublisherMock.VerifyNoOtherCalls();
         _productClientMock.VerifyNoOtherCalls();
@@ -47,18 +47,14 @@ public class CreateOrderHandlerTests
     [Fact]
     public async Task Handle_ShouldReturnFalse_WhenCartIsEmpty()
     {
-        _cartClientMock.Setup(client => client.GetCartAsync(It.IsAny<Guid>(), It.IsAny<string>()))
-                       .ReturnsAsync(new Cart()
-                                     {
-                                         UserId = Guid.NewGuid(),
-                                         Items = new List<CartItem>()
-                                     });
+        _cartClientMock.Setup(client => client.GetCartAsync(It.IsAny<string>()))
+                       .ReturnsAsync(new Cart(Guid.NewGuid(), new List<CartItem>()));
 
         var command = new CreateOrderCommand(Guid.NewGuid(), new Faker().Random.String());
         var result = await _handler.Handle(command, CancellationToken.None);
 
         result.IsSuccess.Should().BeFalse();
-        _cartClientMock.Verify(client => client.GetCartAsync(It.IsAny<Guid>(), It.IsAny<string>()), Times.Once);
+        _cartClientMock.Verify(client => client.GetCartAsync(It.IsAny<string>()), Times.Once);
         _orderRepositoryMock.VerifyNoOtherCalls();
         _eventPublisherMock.VerifyNoOtherCalls();
         _productClientMock.VerifyNoOtherCalls();
@@ -67,14 +63,10 @@ public class CreateOrderHandlerTests
     [Fact]
     public async Task Handle_ShouldReturnFalse_WhenProductsNotExist()
     {
-        _cartClientMock.Setup(client => client.GetCartAsync(It.IsAny<Guid>(), It.IsAny<string>()))
-                       .ReturnsAsync(new Cart()
-                                     {
-                                         UserId = Guid.NewGuid(),
-                                         Items = new Faker<CartItem>().RuleFor(item => item.ProductId, Guid.NewGuid())
-                                                                      .RuleFor(item => item.Quantity, new Faker().Random.Int(1, 10))
-                                                                      .Generate(3),
-                                     });
+        _cartClientMock.Setup(client => client.GetCartAsync(It.IsAny<string>()))
+                       .ReturnsAsync(new Cart(Guid.NewGuid(), new Faker<CartItem>().RuleFor(item => item.ProductId, Guid.NewGuid())
+                                                                                   .RuleFor(item => item.Quantity, new Faker().Random.Int(1, 10))
+                                                                                   .Generate(3)));
         _productClientMock.Setup(client => client.GetProducts(It.IsAny<List<Guid>>(), It.IsAny<string>()))
                           .ReturnsAsync(new List<ProductInfo>());
         
@@ -82,7 +74,7 @@ public class CreateOrderHandlerTests
         var result = await _handler.Handle(command, CancellationToken.None);
         
         result.IsSuccess.Should().BeFalse();
-        _cartClientMock.Verify(client => client.GetCartAsync(It.IsAny<Guid>(), It.IsAny<string>()), Times.Once);
+        _cartClientMock.Verify(client => client.GetCartAsync(It.IsAny<string>()), Times.Once);
         _productClientMock.Verify(client => client.GetProducts(It.IsAny<List<Guid>>(), It.IsAny<string>()), Times.Once);
         _orderRepositoryMock.VerifyNoOtherCalls();
         _eventPublisherMock.VerifyNoOtherCalls();
@@ -91,14 +83,10 @@ public class CreateOrderHandlerTests
     [Fact]
     public async Task Handle_ShouldReturnFalse_WhenProductsDoNotMatch()
     {
-        _cartClientMock.Setup(client => client.GetCartAsync(It.IsAny<Guid>(), It.IsAny<string>()))
-                       .ReturnsAsync(new Cart()
-                                     {
-                                         UserId = Guid.NewGuid(),
-                                         Items = new Faker<CartItem>().RuleFor(item => item.ProductId, Guid.NewGuid())
-                                                                      .RuleFor(item => item.Quantity, new Faker().Random.Int(1, 10))
-                                                                      .Generate(3),
-                                     });
+        _cartClientMock.Setup(client => client.GetCartAsync(It.IsAny<string>()))
+                       .ReturnsAsync(new Cart(Guid.NewGuid(), new Faker<CartItem>().RuleFor(item => item.ProductId, Guid.NewGuid())
+                                                                                   .RuleFor(item => item.Quantity, new Faker().Random.Int(1, 10))
+                                                                                   .Generate(3)));
         _productClientMock.Setup(client => client.GetProducts(It.IsAny<List<Guid>>(), It.IsAny<string>()))
                           .ReturnsAsync(new List<ProductInfo>() { new ProductInfo() { Id = Guid.NewGuid() } });
         
@@ -106,7 +94,7 @@ public class CreateOrderHandlerTests
         var result = await _handler.Handle(command, CancellationToken.None);
         
         result.IsSuccess.Should().BeFalse();
-        _cartClientMock.Verify(client => client.GetCartAsync(It.IsAny<Guid>(), It.IsAny<string>()), Times.Once);
+        _cartClientMock.Verify(client => client.GetCartAsync(It.IsAny<string>()), Times.Once);
         _productClientMock.Verify(client => client.GetProducts(It.IsAny<List<Guid>>(), It.IsAny<string>()), Times.Once);
         _orderRepositoryMock.VerifyNoOtherCalls();
         _eventPublisherMock.VerifyNoOtherCalls();
@@ -116,11 +104,8 @@ public class CreateOrderHandlerTests
     public async Task Handle_ShouldReturnTrue_OrderIsCreated()
     {
         var guid = Guid.NewGuid();
-        _cartClientMock.Setup(client => client.GetCartAsync(It.IsAny<Guid>(), It.IsAny<string>()))
-                       .ReturnsAsync(new Cart() { 
-                                                    UserId = Guid.NewGuid(), 
-                                                    Items = new List<CartItem>() { new CartItem() { ProductId = guid, Quantity = 1, } } 
-                                                });
+        _cartClientMock.Setup(client => client.GetCartAsync(It.IsAny<string>()))
+                       .ReturnsAsync(new Cart(Guid.NewGuid(), new List<CartItem>() { new CartItem(guid, 1) }));
         _productClientMock.Setup(client => client.GetProducts(It.IsAny<List<Guid>>(), It.IsAny<string>()))
                           .ReturnsAsync(new List<ProductInfo>() { new ProductInfo() { Id = guid, UnitPrice = 200 } });
         _orderRepositoryMock.Setup(repo => repo.AddAsync(It.IsAny<Order>()))
@@ -136,7 +121,7 @@ public class CreateOrderHandlerTests
         _orderRepositoryMock.Verify(repo => repo.AddAsync(It.IsAny<Order>()), Times.Once);
         _orderRepositoryMock.Verify(repo => repo.SaveAsync(), Times.Once);
         _eventPublisherMock.Verify(publisher => publisher.PublishAsync(It.IsAny<OrderCreatedEvent>()), Times.Once);
-        _cartClientMock.Verify(client => client.GetCartAsync(It.IsAny<Guid>(), It.IsAny<string>()), Times.Once);
+        _cartClientMock.Verify(client => client.GetCartAsync(It.IsAny<string>()), Times.Once);
         _productClientMock.Verify(client => client.GetProducts(It.IsAny<List<Guid>>(), It.IsAny<string>()), Times.Once);
     }
 }

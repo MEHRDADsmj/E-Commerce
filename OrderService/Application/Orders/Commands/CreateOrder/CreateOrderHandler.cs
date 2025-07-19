@@ -26,8 +26,8 @@ public class CreateOrderHandler : IRequestHandler<CreateOrderCommand, Result<Gui
     
     public async Task<Result<Guid>> Handle(CreateOrderCommand request, CancellationToken cancellationToken)
     {
-        var cart = await _cartClient.GetCartAsync(request.UserId, request.Token);
-        if (cart == null || cart.Items.Count == 0)
+        var cart = await _cartClient.GetCartAsync(request.Token);
+        if (cart.IsEmpty() || cart.Items.Count == 0)
         {
             return Result<Guid>.Failure("Cart is empty");
         }

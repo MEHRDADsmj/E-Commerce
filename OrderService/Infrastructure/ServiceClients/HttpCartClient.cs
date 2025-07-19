@@ -1,4 +1,5 @@
-﻿using System.Net.Http.Headers;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Net.Http.Headers;
 using System.Text.Json;
 using OrderService.Application.Interfaces;
 using OrderService.Contracts.DTOs;
@@ -15,7 +16,7 @@ public class HttpCartClient : ICartClient
         _httpClient = httpClient;
     }
     
-    public async Task<Cart?> GetCartAsync(Guid userId, string token)
+    public async Task<Cart> GetCartAsync(string token)
     {
         var opt = new JsonSerializerOptions
                   {
@@ -24,6 +25,15 @@ public class HttpCartClient : ICartClient
         _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
         var response = await _httpClient.GetAsync("carts");
         response.EnsureSuccessStatusCode();
-        return (await response.Content.ReadFromJsonAsync<CartDto>(opt)).Cart ?? null;
+        try
+        {
+            var dto = await response.Content.ReadFromJsonAsync<CartDto>(opt);
+            return dto == null ? Cart.Empty() : dto.Cart;
+        }
+        catch (ValidationException e)
+        {
+            Console.WriteLine(e);
+            return Cart.Empty();
+        }
     }
 }
