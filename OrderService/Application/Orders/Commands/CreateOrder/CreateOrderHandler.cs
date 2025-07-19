@@ -56,11 +56,11 @@ public class CreateOrderHandler : IRequestHandler<CreateOrderCommand, Result<Gui
     private async Task<Dictionary<Guid, ProductInfo>> GetProductsAsDictionary(List<CartItem> items, string token)
     {
         var productIds = items.Select((item => item.ProductId)).Distinct();
-        var products = await GetProductsBulk(productIds.ToList(), token);
+        var products = await GetProductsBulk(productIds, token);
         return products.ToDictionary(p => p.Id);
     }
     
-    private async Task<IEnumerable<ProductInfo>> GetProductsBulk(List<Guid> productIds, string token)
+    private async Task<IEnumerable<ProductInfo>> GetProductsBulk(IEnumerable<Guid> productIds, string token)
     {
         return await _productClient.GetProducts(productIds, token);
     }

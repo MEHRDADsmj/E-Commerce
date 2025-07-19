@@ -15,7 +15,7 @@ public class HttpProductClient : IProductClient
         _httpClient = httpClient;
     }
     
-    public async Task<IEnumerable<ProductInfo>> GetProducts(List<Guid> productIds, string token)
+    public async Task<IEnumerable<ProductInfo>> GetProducts(IEnumerable<Guid> productIds, string token)
     {
         var opt = new JsonSerializerOptions
                   {

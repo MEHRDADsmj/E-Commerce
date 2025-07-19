@@ -75,7 +75,7 @@ public class CreateOrderHandlerTests
         
         result.IsSuccess.Should().BeFalse();
         _cartClientMock.Verify(client => client.GetCartAsync(It.IsAny<string>()), Times.Once);
-        _productClientMock.Verify(client => client.GetProducts(It.IsAny<List<Guid>>(), It.IsAny<string>()), Times.Once);
+        _productClientMock.Verify(client => client.GetProducts(It.IsAny<IEnumerable<Guid>>(), It.IsAny<string>()), Times.Once);
         _orderRepositoryMock.VerifyNoOtherCalls();
         _eventPublisherMock.VerifyNoOtherCalls();
     }
@@ -88,14 +88,14 @@ public class CreateOrderHandlerTests
                                                                                    .RuleFor(item => item.Quantity, new Faker().Random.Int(1, 10))
                                                                                    .Generate(3)));
         _productClientMock.Setup(client => client.GetProducts(It.IsAny<List<Guid>>(), It.IsAny<string>()))
-                          .ReturnsAsync(new List<ProductInfo>() { new ProductInfo() { Id = Guid.NewGuid() } });
+                          .ReturnsAsync(new List<ProductInfo>() { new ProductInfo(Guid.NewGuid(), "null", 1) });
         
         var command = new CreateOrderCommand(Guid.NewGuid(), new Faker().Random.String());
         var result = await _handler.Handle(command, CancellationToken.None);
         
         result.IsSuccess.Should().BeFalse();
         _cartClientMock.Verify(client => client.GetCartAsync(It.IsAny<string>()), Times.Once);
-        _productClientMock.Verify(client => client.GetProducts(It.IsAny<List<Guid>>(), It.IsAny<string>()), Times.Once);
+        _productClientMock.Verify(client => client.GetProducts(It.IsAny<IEnumerable<Guid>>(), It.IsAny<string>()), Times.Once);
         _orderRepositoryMock.VerifyNoOtherCalls();
         _eventPublisherMock.VerifyNoOtherCalls();
     }
@@ -107,7 +107,7 @@ public class CreateOrderHandlerTests
         _cartClientMock.Setup(client => client.GetCartAsync(It.IsAny<string>()))
                        .ReturnsAsync(new Cart(Guid.NewGuid(), new List<CartItem>() { new CartItem(guid, 1) }));
         _productClientMock.Setup(client => client.GetProducts(It.IsAny<List<Guid>>(), It.IsAny<string>()))
-                          .ReturnsAsync(new List<ProductInfo>() { new ProductInfo() { Id = guid, UnitPrice = 200 } });
+                          .ReturnsAsync(new List<ProductInfo>() { new ProductInfo(guid, "null", 200) });
         _orderRepositoryMock.Setup(repo => repo.AddAsync(It.IsAny<Order>()))
                             .Returns(Task.CompletedTask);
         _orderRepositoryMock.Setup(repo => repo.SaveAsync()).Returns(Task.CompletedTask);
@@ -122,6 +122,6 @@ public class CreateOrderHandlerTests
         _orderRepositoryMock.Verify(repo => repo.SaveAsync(), Times.Once);
         _eventPublisherMock.Verify(publisher => publisher.PublishAsync(It.IsAny<OrderCreatedEvent>()), Times.Once);
         _cartClientMock.Verify(client => client.GetCartAsync(It.IsAny<string>()), Times.Once);
-        _productClientMock.Verify(client => client.GetProducts(It.IsAny<List<Guid>>(), It.IsAny<string>()), Times.Once);
+        _productClientMock.Verify(client => client.GetProducts(It.IsAny<IEnumerable<Guid>>(), It.IsAny<string>()), Times.Once);
     }
 }
