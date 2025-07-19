@@ -2,9 +2,9 @@
 
 public class OrderCreatedEvent
 {
-    public Guid OrderId { get; set; }
-    public Guid UserId { get; set; }
-    public decimal TotalPrice { get; set; }
+    public Guid OrderId { get; init; }
+    public Guid UserId { get; init; }
+    public decimal TotalPrice { get; init; }
 
     public OrderCreatedEvent(Guid orderId, Guid userId, decimal totalPrice)
     {

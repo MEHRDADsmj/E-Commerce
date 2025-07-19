@@ -44,7 +44,7 @@ public class CreateOrderHandler : IRequestHandler<CreateOrderCommand, Result<Gui
             return Result<Guid>.Failure(ex.Message);
         }
 
-        var order = new Order(cart.UserId, orderItems);
+        Order order = new Order(cart.UserId, orderItems);
         await _orderRepository.AddAsync(order);
         await _orderRepository.SaveAsync();
 

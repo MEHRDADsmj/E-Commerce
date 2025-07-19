@@ -106,7 +106,7 @@ public class CreateOrderHandlerTests
         var guid = Guid.NewGuid();
         _cartClientMock.Setup(client => client.GetCartAsync(It.IsAny<string>()))
                        .ReturnsAsync(new Cart(Guid.NewGuid(), new List<CartItem>() { new CartItem(guid, 1) }));
-        _productClientMock.Setup(client => client.GetProducts(It.IsAny<List<Guid>>(), It.IsAny<string>()))
+        _productClientMock.Setup(client => client.GetProducts(It.IsAny<IEnumerable<Guid>>(), It.IsAny<string>()))
                           .ReturnsAsync(new List<ProductInfo>() { new ProductInfo(guid, "null", 200) });
         _orderRepositoryMock.Setup(repo => repo.AddAsync(It.IsAny<Order>()))
                             .Returns(Task.CompletedTask);
