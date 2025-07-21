@@ -1,6 +1,6 @@
 ﻿using FluentAssertions;
 using Moq;
-using OrderService.Application.Orders.Commands.GetOrderById;
+using OrderService.Application.Orders.Queries.GetOrderById;
 using OrderService.Domain.Entities;
 using OrderService.Domain.Interfaces;
 

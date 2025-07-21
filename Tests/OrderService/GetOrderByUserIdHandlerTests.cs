@@ -1,7 +1,7 @@
 ﻿using Bogus;
 using FluentAssertions;
 using Moq;
-using OrderService.Application.Orders.Commands.GetOrderByUserId;
+using OrderService.Application.Orders.Queries.GetOrderByUserId;
 using OrderService.Domain.Entities;
 using OrderService.Domain.Interfaces;
 

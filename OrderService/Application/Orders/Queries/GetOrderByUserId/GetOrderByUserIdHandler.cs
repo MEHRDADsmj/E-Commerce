@@ -1,10 +1,9 @@
 ﻿using MediatR;
 using OrderService.Contracts.DTOs;
-using OrderService.Domain.Entities;
 using OrderService.Domain.Interfaces;
 using Shared.Data;
 
-namespace OrderService.Application.Orders.Commands.GetOrderByUserId;
+namespace OrderService.Application.Orders.Queries.GetOrderByUserId;
 
 public class GetOrderByUserIdHandler : IRequestHandler<GetOrderByUserIdQuery, Result<IEnumerable<OrderDto>>>
 {

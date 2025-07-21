@@ -2,8 +2,8 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OrderService.Application.Orders.Commands.CreateOrder;
-using OrderService.Application.Orders.Commands.GetOrderById;
-using OrderService.Application.Orders.Commands.GetOrderByUserId;
+using OrderService.Application.Orders.Queries.GetOrderById;
+using OrderService.Application.Orders.Queries.GetOrderByUserId;
 using OrderService.Presentation.DTOs;
 
 namespace OrderService.Presentation.Controllers;
