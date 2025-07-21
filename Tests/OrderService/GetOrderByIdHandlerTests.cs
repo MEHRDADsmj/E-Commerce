@@ -21,7 +21,7 @@ public class GetOrderByIdHandlerTests
     public async Task Handle_ShouldReturnFalse_WhenOrderIsNotFound()
     {
         _orderRepositoryMock.Setup(repo => repo.GetByIdAsync(It.IsAny<Guid>()))
-                            .ReturnsAsync(null as Order);
+                            .ReturnsAsync(Order.Empty);
 
         var query = new GetOrderByIdQuery(Guid.NewGuid());
         var result = await _handler.Handle(query, CancellationToken.None);

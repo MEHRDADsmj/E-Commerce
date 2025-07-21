@@ -48,15 +48,15 @@ public class OrdersController : ControllerBase
         return BadRequest(result.ErrorMessage);
     }
 
-    [HttpGet("get/{id}")]
-    public async Task<IActionResult> GetOrderById(Guid id)
+    [HttpGet("get/{id:guid}")]
+    public async Task<ActionResult<GetOrderByIdResponseDto>> GetOrderById(Guid id)
     {
         var command = new GetOrderByIdQuery(id);
         var result = await _mediator.Send(command);
 
         if (result.IsSuccess)
         {
-            var dto = new GetOrderByIdResponseDto(result.Value);
+            var dto = new GetOrderByIdResponseDto(result.Value!);
             return Ok(dto);
         }
         return BadRequest(result.ErrorMessage);

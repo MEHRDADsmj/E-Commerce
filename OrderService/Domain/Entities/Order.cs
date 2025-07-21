@@ -27,6 +27,16 @@ public class Order
     {
         
     }
+
+    public static Order Empty()
+    {
+        return new Order()
+               {
+                   Id = Guid.Empty,
+               };
+    }
+    
+    public bool IsEmpty() => Id == Guid.Empty;
     
     public void MarkAsPaid() => Status = OrderStatus.Paid;
     public void MarkAsFailed() => Status = OrderStatus.Failed;

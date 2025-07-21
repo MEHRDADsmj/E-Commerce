@@ -17,7 +17,7 @@ public class GetOrderByIdHandler : IRequestHandler<GetOrderByIdQuery, Result<Ord
     public async Task<Result<Order>> Handle(GetOrderByIdQuery request, CancellationToken cancellationToken)
     {
         var order = await _orderRepository.GetByIdAsync(request.OrderId);
-        if (order == null)
+        if (order.IsEmpty())
         {
             return Result<Order>.Failure("Order not found");
         }

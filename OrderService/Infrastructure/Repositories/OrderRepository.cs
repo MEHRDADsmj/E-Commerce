@@ -22,10 +22,10 @@ public class OrderRepository : IOrderRepository
         await _context.Orders.AddAsync(order);
     }
 
-    public async Task<Order?> GetByIdAsync(Guid orderId)
+    public async Task<Order> GetByIdAsync(Guid orderId)
     {
         var order = await _context.Orders.Include(order => order.Items)
-                                  .FirstOrDefaultAsync(o => o.Id == orderId);
+                                  .FirstOrDefaultAsync(o => o.Id == orderId) ?? Order.Empty();
         return order;
     }
 
