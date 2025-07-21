@@ -16,7 +16,7 @@ public class MarkOrderAsPaidHandler : IRequestHandler<MarkOrderAsPaidCommand, Re
     public async Task<Result<bool>> Handle(MarkOrderAsPaidCommand request, CancellationToken cancellationToken)
     {
         var order = await _orderRepository.GetByIdAsync(request.OrderId);
-        if (order == null)
+        if (order.IsEmpty())
         {
             return Result<bool>.Failure("Order not found");
         }

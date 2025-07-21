@@ -21,7 +21,7 @@ public class MarkOrderAsPaidHandlerTests
     public async Task Handle_ShouldReturnFalse_WhenOrderIsNotFound()
     {
         _orderRepositoryMock.Setup(repo => repo.GetByIdAsync(It.IsAny<Guid>()))
-                            .ReturnsAsync(null as Order);
+                            .ReturnsAsync(Order.Empty);
         
         var command = new MarkOrderAsPaidCommand(Guid.NewGuid());
         var result = await _handler.Handle(command, CancellationToken.None);

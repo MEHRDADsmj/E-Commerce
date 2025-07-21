@@ -16,7 +16,7 @@ public class MarkOrderAsFailedHandler : IRequestHandler<MarkOrderAsFailedCommand
     public async Task<Result<bool>> Handle(MarkOrderAsFailedCommand request, CancellationToken cancellationToken)
     {
         var order = await _orderRepository.GetByIdAsync(request.Id);
-        if (order == null)
+        if (order.IsEmpty())
         {
             return Result<bool>.Failure("Order not found");
         }
