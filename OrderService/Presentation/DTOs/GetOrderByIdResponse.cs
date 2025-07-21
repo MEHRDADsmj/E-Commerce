@@ -1,5 +1,6 @@
-﻿using OrderService.Domain.Entities;
+﻿using OrderService.Contracts.DTOs;
+using OrderService.Domain.Entities;
 
 namespace OrderService.Presentation.DTOs;
 
-public record GetOrderByIdResponseDto(Order Order);
+public record GetOrderByIdResponseDto(OrderDto Order);
