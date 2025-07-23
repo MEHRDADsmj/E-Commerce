@@ -29,7 +29,7 @@ public class CartsController : ControllerBase
         return Ok("Carts Healthy");
     }
     
-    private bool GetUserIdFromClaims(out string userId, out IActionResult actionResult)
+    private bool GetUserIdFromClaims(out string userId, out ActionResult actionResult)
     {
         userId = HttpContext.User.Claims.FirstOrDefault(claim => claim.Type == "user_id")?.Value ?? string.Empty;
         if (userId == string.Empty)
@@ -43,7 +43,7 @@ public class CartsController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<IActionResult> GetCart()
+    public async Task<ActionResult<GetUserCartResponseDto>> GetCart()
     {
         if (GetUserIdFromClaims(out var userId, out var actionResult)) return actionResult;
 
@@ -52,7 +52,7 @@ public class CartsController : ControllerBase
 
         if (result.IsSuccess)
         {
-            var resp = new GetUserCartResponseDto(result.Value);
+            var resp = new GetUserCartResponseDto(result.Value!);
             return Ok(resp);
         }
         return BadRequest(result.ErrorMessage);
