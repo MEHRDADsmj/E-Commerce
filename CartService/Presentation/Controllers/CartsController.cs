@@ -115,7 +115,7 @@ public class CartsController : ControllerBase
         
         if (result.IsSuccess)
         {
-            return Ok();
+            return NoContent();
         }
         return BadRequest(result.ErrorMessage);
     }
