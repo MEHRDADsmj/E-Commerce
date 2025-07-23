@@ -26,11 +26,7 @@ public class RedisCartRepositoryTests : IAsyncLifetime
     public async Task SaveAndGetAsync_ShouldPersistCart()
     {
         var userId = Guid.NewGuid();
-        var cart = new Cart()
-                   {
-                       UserId = userId,
-                       Items = new List<CartItem>(),
-                   };
+        var cart = new Cart(userId, new List<CartItem>());
         cart.Items.Add(new CartItem() { ProductId = Guid.NewGuid(), Quantity = 2 });
         
         await _repository.SaveAsync(cart);
@@ -46,8 +42,8 @@ public class RedisCartRepositoryTests : IAsyncLifetime
     {
         var userId = Guid.NewGuid();
         var productId = Guid.NewGuid();
-        
-        var cart = new Cart() { UserId = userId, Items = new List<CartItem>() };
+
+        var cart = new Cart(userId, new List<CartItem>());
         cart.Items.Add(new CartItem() { ProductId = productId, Quantity = 1 });
         cart.Items.Add(new CartItem() { ProductId = Guid.NewGuid(), Quantity = 3 });
         
@@ -64,7 +60,7 @@ public class RedisCartRepositoryTests : IAsyncLifetime
     public async Task ClearAsync_ShouldClearCart()
     {
         var userId = Guid.NewGuid();
-        var cart = new Cart() { UserId = userId, Items = new List<CartItem>() };
+        var cart = new Cart(userId, new List<CartItem>());
         cart.Items.Add(new CartItem() { ProductId = Guid.NewGuid(), Quantity = 2 });
         
         await _repository.SaveAsync(cart);
@@ -91,7 +87,7 @@ public class RedisCartRepositoryTests : IAsyncLifetime
     {
         var userId = Guid.NewGuid();
         var productId = Guid.NewGuid();
-        var cart = new Cart() { UserId = userId, Items = new List<CartItem>() };
+        var cart = new Cart(userId, new List<CartItem>());
         cart.Items.Add(new CartItem() { ProductId = productId, Quantity = 2 });
         
         await _repository.SaveAsync(cart);
@@ -108,7 +104,7 @@ public class RedisCartRepositoryTests : IAsyncLifetime
     {
         var userId = Guid.NewGuid();
         var productId = Guid.NewGuid();
-        var cart = new Cart() { UserId = userId, Items = new List<CartItem>() };
+        var cart = new Cart(userId, new List<CartItem>());
 
         await _repository.SaveAsync(cart);
         await _repository.AddItemAsync(userId, productId, 5);
@@ -124,7 +120,7 @@ public class RedisCartRepositoryTests : IAsyncLifetime
     {
         var userId = Guid.NewGuid();
         var productId = Guid.NewGuid();
-        var cart = new Cart() { UserId = userId, Items = new List<CartItem>() };
+        var cart = new Cart(userId, new List<CartItem>());
         cart.Items.Add(new CartItem() { ProductId = productId, Quantity = 2 });
         
         await _repository.SaveAsync(cart);

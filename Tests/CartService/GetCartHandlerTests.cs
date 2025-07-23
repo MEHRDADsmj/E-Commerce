@@ -22,7 +22,7 @@ public class GetCartHandlerTests
     {
         _cartRepositoryMock
             .Setup(cartRepo => cartRepo.GetAsync(It.IsAny<Guid>()))
-            .ReturnsAsync(new Cart());
+            .ReturnsAsync(new Cart(Guid.NewGuid(), new List<CartItem>()));
 
         var query = new GetCartQuery(Guid.NewGuid());
         var res = await _handler.Handle(query, CancellationToken.None);
@@ -37,7 +37,7 @@ public class GetCartHandlerTests
     {
         _cartRepositoryMock
             .Setup(cartRepo => cartRepo.GetAsync(It.IsAny<Guid>()))
-            .ReturnsAsync(null as Cart);
+            .ReturnsAsync(Cart.Empty);
         
         var query = new GetCartQuery(Guid.NewGuid());
         var res = await _handler.Handle(query, CancellationToken.None);

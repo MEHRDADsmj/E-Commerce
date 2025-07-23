@@ -22,7 +22,7 @@ public class UpdateItemQuantityHandlerTests
     {
         _cartRepositoryMock
             .Setup(repo => repo.GetAsync(It.IsAny<Guid>()))
-            .ReturnsAsync(new Cart());
+            .ReturnsAsync(new Cart(Guid.NewGuid(), new List<CartItem>()));
         _cartRepositoryMock
             .Setup(repo => repo.UpdateItemQuantityAsync(It.IsAny<Guid>(), It.IsAny<Guid>(), It.IsAny<int>()))
             .Returns(Task.CompletedTask);
@@ -42,7 +42,7 @@ public class UpdateItemQuantityHandlerTests
     {
         _cartRepositoryMock
             .Setup(repo => repo.GetAsync(It.IsAny<Guid>()))
-            .ReturnsAsync(new Cart());
+            .ReturnsAsync(new Cart(Guid.NewGuid(), new List<CartItem>()));
         _cartRepositoryMock
             .Setup(repo => repo.UpdateItemQuantityAsync(It.IsAny<Guid>(), It.IsAny<Guid>(), It.IsAny<int>()))
             .ThrowsAsync(new ArgumentOutOfRangeException("item quantity"));
@@ -62,7 +62,7 @@ public class UpdateItemQuantityHandlerTests
     {
         _cartRepositoryMock
             .Setup(repo => repo.GetAsync(It.IsAny<Guid>()))
-            .ReturnsAsync(null as Cart);
+            .ReturnsAsync(Cart.Empty);
         
         var rnd = new Random();
         var command = new UpdateItemQuantityCommand(Guid.NewGuid(), Guid.NewGuid(), rnd.Next(int.MinValue, 0));

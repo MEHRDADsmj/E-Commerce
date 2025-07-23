@@ -16,7 +16,7 @@ public class RemoveItemFromCartHandler : IRequestHandler<RemoveItemFromCartComma
     public async Task<Result<bool>> Handle(RemoveItemFromCartCommand command, CancellationToken cancellationToken)
     {
         var cart = await _cartRepository.GetAsync(command.UserId);
-        if (cart == null)
+        if (cart.IsEmpty())
         {
             return Result<bool>.Failure("Invalid cart");
         }

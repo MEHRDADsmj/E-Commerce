@@ -16,10 +16,10 @@ public class AddItemToCartHandler : IRequestHandler<AddItemToCartCommand, Result
     public async Task<Result<bool>> Handle(AddItemToCartCommand command, CancellationToken cancellationToken)
     {
         var cart = await _cartRepository.GetAsync(command.UserId);
-        if (cart == null)
+        if (cart.IsEmpty())
         {
             cart = await _cartRepository.CreateCartAsync(command.UserId);
-            if (cart == null)
+            if (cart.IsEmpty())
             {
                 return Result<bool>.Failure("Failed to create cart");
             }

@@ -29,10 +29,10 @@ public class CartsController : ControllerBase
         return Ok("Carts Healthy");
     }
     
-    private bool GetUserIdFromClaims(out string? userId, out IActionResult actionResult)
+    private bool GetUserIdFromClaims(out string userId, out IActionResult actionResult)
     {
-        userId = HttpContext.User.Claims.FirstOrDefault(claim => claim.Type == "user_id")?.Value;
-        if (userId == null)
+        userId = HttpContext.User.Claims.FirstOrDefault(claim => claim.Type == "user_id")?.Value ?? string.Empty;
+        if (userId == string.Empty)
         {
             actionResult = Unauthorized("JWT token is invalid");
             return true;

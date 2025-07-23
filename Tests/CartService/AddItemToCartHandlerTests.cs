@@ -22,7 +22,7 @@ public class AddItemToCartHandlerTests
     {
         _cartRepositoryMock
             .Setup(cartRepo => cartRepo.GetAsync(It.IsAny<Guid>()))
-            .ReturnsAsync(new Cart());
+            .ReturnsAsync(new Cart(Guid.NewGuid(), new List<CartItem>()));
         _cartRepositoryMock
             .Setup(cartRepo => cartRepo.AddItemAsync(It.IsAny<Guid>(), It.IsAny<Guid>(), It.IsAny<int>()))
             .Returns(Task.CompletedTask);
@@ -43,10 +43,10 @@ public class AddItemToCartHandlerTests
     {
         _cartRepositoryMock
             .Setup(cartRepo => cartRepo.GetAsync(It.IsAny<Guid>()))
-            .ReturnsAsync(null as Cart);
+            .ReturnsAsync(Cart.Empty);
         _cartRepositoryMock
             .Setup(cartRepo => cartRepo.CreateCartAsync(It.IsAny<Guid>()))
-            .ReturnsAsync(new Cart());
+            .ReturnsAsync(new Cart(Guid.NewGuid(), new List<CartItem>()));
         _cartRepositoryMock
             .Setup(cartRepo => cartRepo.AddItemAsync(It.IsAny<Guid>(), It.IsAny<Guid>(), It.IsAny<int>()))
             .Returns(Task.CompletedTask);
@@ -67,10 +67,10 @@ public class AddItemToCartHandlerTests
     {
         _cartRepositoryMock
             .Setup(cartRepo => cartRepo.GetAsync(It.IsAny<Guid>()))
-            .ReturnsAsync(null as Cart);
+            .ReturnsAsync(Cart.Empty);
         _cartRepositoryMock
             .Setup(cartRepo => cartRepo.CreateCartAsync(It.IsAny<Guid>()))
-            .ReturnsAsync(null as Cart);
+            .ReturnsAsync(Cart.Empty);
             
         var rnd = new Random();
         var command = new AddItemToCartCommand(Guid.NewGuid(), Guid.NewGuid(), rnd.Next(1, int.MaxValue));
@@ -88,7 +88,7 @@ public class AddItemToCartHandlerTests
     {
         _cartRepositoryMock
             .Setup(cartRepo => cartRepo.GetAsync(It.IsAny<Guid>()))
-            .ReturnsAsync(new Cart());
+            .ReturnsAsync(new Cart(Guid.NewGuid(), new List<CartItem>()));
         _cartRepositoryMock
             .Setup(cartRepo => cartRepo.AddItemAsync(It.IsAny<Guid>(), It.IsAny<Guid>(), It.IsAny<int>()))
             .ThrowsAsync(new ArgumentOutOfRangeException("Quantity"));

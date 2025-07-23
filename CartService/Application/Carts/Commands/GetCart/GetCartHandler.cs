@@ -17,7 +17,7 @@ public class GetCartHandler : IRequestHandler<GetCartQuery, Result<Cart>>
     public async Task<Result<Cart>> Handle(GetCartQuery query, CancellationToken token)
     {
         var cart = await _cartRepository.GetAsync(query.UserId);
-        if (cart == null)
+        if (cart.IsEmpty())
         {
             return Result<Cart>.Failure("Cart not found");
         }

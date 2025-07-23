@@ -18,18 +18,18 @@ public class RedisCartRepository : ICartRepository
     
     private string GetKey(Guid userId) => $"cart:{userId}";
     
-    public async Task<Cart?> GetAsync(Guid userId)
+    public async Task<Cart> GetAsync(Guid userId)
     {
         var data = await _database.StringGetAsync(GetKey(userId));
-        if (data.IsNullOrEmpty) return null;
+        if (data.IsNullOrEmpty) return Cart.Empty();
         
-        return JsonSerializer.Deserialize<Cart>(data!);
+        return JsonSerializer.Deserialize<Cart>(data!) ?? Cart.Empty();
     }
 
     public async Task AddItemAsync(Guid userId, Guid productId, int quantity)
     {
         var cart = await GetAsync(userId);
-        if (cart == null) return;
+        if (cart.IsEmpty()) return;
 
         var item = cart.Items.FirstOrDefault(item => item.ProductId == productId);
         if (item != null)
@@ -52,7 +52,7 @@ public class RedisCartRepository : ICartRepository
     public async Task RemoveItemAsync(Guid userId, Guid productId)
     {
         var cart = await GetAsync(userId);
-        if (cart == null) return;
+        if (cart.IsEmpty()) return;
 
         var item = cart.Items.FirstOrDefault(item => item.ProductId == productId);
         if (item == null) return;
@@ -63,7 +63,7 @@ public class RedisCartRepository : ICartRepository
     public async Task UpdateItemQuantityAsync(Guid userId, Guid productId, int newQuantity)
     {
         var cart = await GetAsync(userId);
-        if (cart == null) return;
+        if (cart.IsEmpty()) return;
         
         var item = cart.Items.FirstOrDefault(item => item.ProductId == productId);
         if (item == null) return;
@@ -76,22 +76,18 @@ public class RedisCartRepository : ICartRepository
     public async Task ClearCartAsync(Guid userId)
     {
         var cart = await GetAsync(userId);
-        if (cart == null) return;
+        if (cart.IsEmpty()) return;
         
         cart.Items.Clear();
         await SaveAsync(cart);
     }
 
-    public async Task<Cart?> CreateCartAsync(Guid userId)
+    public async Task<Cart> CreateCartAsync(Guid userId)
     {
         var cart = await GetAsync(userId);
-        if (cart != null) return cart;
+        if (!cart.IsEmpty()) return cart;
 
-        var newCart = new Cart()
-                      {
-                          UserId = userId,
-                          Items = new List<CartItem>(),
-                      };
+        var newCart = new Cart(userId, new List<CartItem>());
         await SaveAsync(newCart);
         return newCart;
     }

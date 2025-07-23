@@ -22,7 +22,7 @@ public class ClearCartHandlerTests
     {
         _cartRepositoryMock
             .Setup(repo => repo.GetAsync(It.IsAny<Guid>()))
-            .ReturnsAsync(new Cart());
+            .ReturnsAsync(new Cart(Guid.NewGuid(), new List<CartItem>()));
         _cartRepositoryMock
             .Setup(repo => repo.ClearCartAsync(It.IsAny<Guid>()))
             .Returns(Task.CompletedTask);
@@ -40,7 +40,7 @@ public class ClearCartHandlerTests
     {
         _cartRepositoryMock
             .Setup(repo => repo.GetAsync(It.IsAny<Guid>()))
-            .ReturnsAsync(null as Cart);
+            .ReturnsAsync(Cart.Empty);
         
         var command = new ClearCartCommand(Guid.NewGuid());
         var result = await _handler.Handle(command, CancellationToken.None);
