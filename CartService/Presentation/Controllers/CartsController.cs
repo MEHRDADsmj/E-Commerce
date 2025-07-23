@@ -75,7 +75,7 @@ public class CartsController : ControllerBase
     }
     
     [HttpPost("remove")]
-    public async Task<IActionResult> RemoveItemFromCart(RemoveItemFromCartRequestDto dto)
+    public async Task<IActionResult> RemoveItemFromCart([FromBody] RemoveItemFromCartRequestDto dto)
     {
         if (GetUserIdFromClaims(out var userId, out var actionResult)) return actionResult;
 
@@ -84,7 +84,7 @@ public class CartsController : ControllerBase
 
         if (result.IsSuccess)
         {
-            return Ok();
+            return NoContent();
         }
         return BadRequest(result.ErrorMessage);
     }
