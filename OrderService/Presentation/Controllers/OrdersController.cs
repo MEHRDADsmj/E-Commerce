@@ -49,7 +49,7 @@ public class OrdersController : ControllerBase
     }
 
     [HttpGet("get/{id:guid}")]
-    public async Task<ActionResult<GetOrderByIdResponseDto>> GetOrderById(Guid id)
+    public async Task<ActionResult<GetOrderByIdResponseDto>> GetOrderById([FromRoute] Guid id)
     {
         var command = new GetOrderByIdQuery(id);
         var result = await _mediator.Send(command);
@@ -63,7 +63,7 @@ public class OrdersController : ControllerBase
     }
 
     [HttpGet("user/{id:guid}")]
-    public async Task<ActionResult<GetOrderByUserIdResponseDto>> GetOrdersByUserId(Guid id)
+    public async Task<ActionResult<GetOrderByUserIdResponseDto>> GetOrdersByUserId([FromRoute] Guid id)
     {
         var command = new GetOrderByUserIdQuery(id);
         var result = await _mediator.Send(command);
