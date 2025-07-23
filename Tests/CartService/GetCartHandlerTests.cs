@@ -1,4 +1,4 @@
-﻿using CartService.Application.Carts.Commands.GetCart;
+﻿using CartService.Application.Carts.Queries.GetCart;
 using CartService.Domain.Entities;
 using CartService.Domain.Interfaces;
 using FluentAssertions;

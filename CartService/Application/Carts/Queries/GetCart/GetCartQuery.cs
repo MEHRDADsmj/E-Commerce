@@ -2,6 +2,6 @@
 using MediatR;
 using Shared.Data;
 
-namespace CartService.Application.Carts.Commands.GetCart;
+namespace CartService.Application.Carts.Queries.GetCart;
 
 public record GetCartQuery(Guid UserId) : IRequest<Result<Cart>>;

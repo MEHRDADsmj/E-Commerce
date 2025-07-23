@@ -3,7 +3,7 @@ using CartService.Domain.Interfaces;
 using MediatR;
 using Shared.Data;
 
-namespace CartService.Application.Carts.Commands.GetCart;
+namespace CartService.Application.Carts.Queries.GetCart;
 
 public class GetCartHandler : IRequestHandler<GetCartQuery, Result<Cart>>
 {

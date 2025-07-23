@@ -1,8 +1,8 @@
 ﻿using CartService.Application.Carts.Commands.AddItemToCart;
 using CartService.Application.Carts.Commands.ClearCart;
-using CartService.Application.Carts.Commands.GetCart;
 using CartService.Application.Carts.Commands.RemoveItemFromCart;
 using CartService.Application.Carts.Commands.UpdateItemQuantity;
+using CartService.Application.Carts.Queries.GetCart;
 using CartService.Presentation.DTOs;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
