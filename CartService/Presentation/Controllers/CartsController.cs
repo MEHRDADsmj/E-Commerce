@@ -89,8 +89,8 @@ public class CartsController : ControllerBase
         return BadRequest(result.ErrorMessage);
     }
 
-    [HttpPost("update")]
-    public async Task<IActionResult> UpdateItemQuantity(UpdateItemQuantityRequestDto dto)
+    [HttpPatch("update")]
+    public async Task<ActionResult<UpdateItemQuantityResponseDto>> UpdateItemQuantity([FromBody] UpdateItemQuantityRequestDto dto)
     {
         if (GetUserIdFromClaims(out var userId, out var actionResult)) return actionResult;
         

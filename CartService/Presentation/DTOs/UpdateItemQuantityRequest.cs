@@ -1,3 +1,15 @@
-﻿namespace CartService.Presentation.DTOs;
+﻿using System.ComponentModel.DataAnnotations;
 
-public record UpdateItemQuantityRequestDto(Guid ProductId, int NewQuantity);
+namespace CartService.Presentation.DTOs;
+
+public class UpdateItemQuantityRequestDto
+{
+    public Guid ProductId { get; }
+    [Range(1, int.MaxValue)] public int NewQuantity { get; }
+
+    public UpdateItemQuantityRequestDto(Guid productId, int newQuantity)
+    {
+        ProductId = productId;
+        NewQuantity = newQuantity;
+    }
+}
