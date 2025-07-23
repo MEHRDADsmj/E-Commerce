@@ -27,7 +27,7 @@ public class RedisCartRepositoryTests : IAsyncLifetime
     {
         var userId = Guid.NewGuid();
         var cart = new Cart(userId, new List<CartItem>());
-        cart.Items.Add(new CartItem() { ProductId = Guid.NewGuid(), Quantity = 2 });
+        cart.Items.Add(new CartItem(Guid.NewGuid(), 2));
         
         await _repository.SaveAsync(cart);
         var result = await _repository.GetAsync(userId);
@@ -44,8 +44,8 @@ public class RedisCartRepositoryTests : IAsyncLifetime
         var productId = Guid.NewGuid();
 
         var cart = new Cart(userId, new List<CartItem>());
-        cart.Items.Add(new CartItem() { ProductId = productId, Quantity = 1 });
-        cart.Items.Add(new CartItem() { ProductId = Guid.NewGuid(), Quantity = 3 });
+        cart.Items.Add(new CartItem(productId, 1));
+        cart.Items.Add(new CartItem(Guid.NewGuid(), 3));
         
         await _repository.SaveAsync(cart);
         await _repository.RemoveItemAsync(userId, productId);
@@ -61,7 +61,7 @@ public class RedisCartRepositoryTests : IAsyncLifetime
     {
         var userId = Guid.NewGuid();
         var cart = new Cart(userId, new List<CartItem>());
-        cart.Items.Add(new CartItem() { ProductId = Guid.NewGuid(), Quantity = 2 });
+        cart.Items.Add(new CartItem(Guid.NewGuid(), 2));
         
         await _repository.SaveAsync(cart);
         await _repository.ClearCartAsync(userId);
@@ -88,7 +88,7 @@ public class RedisCartRepositoryTests : IAsyncLifetime
         var userId = Guid.NewGuid();
         var productId = Guid.NewGuid();
         var cart = new Cart(userId, new List<CartItem>());
-        cart.Items.Add(new CartItem() { ProductId = productId, Quantity = 2 });
+        cart.Items.Add(new CartItem(productId, 2));
         
         await _repository.SaveAsync(cart);
         await _repository.UpdateItemQuantityAsync(userId, productId, 5);
@@ -121,7 +121,7 @@ public class RedisCartRepositoryTests : IAsyncLifetime
         var userId = Guid.NewGuid();
         var productId = Guid.NewGuid();
         var cart = new Cart(userId, new List<CartItem>());
-        cart.Items.Add(new CartItem() { ProductId = productId, Quantity = 2 });
+        cart.Items.Add(new CartItem(productId, 2));
         
         await _repository.SaveAsync(cart);
         try

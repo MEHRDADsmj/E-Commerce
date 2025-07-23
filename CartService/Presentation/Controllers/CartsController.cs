@@ -59,7 +59,7 @@ public class CartsController : ControllerBase
     }
 
     [HttpPost("add")]
-    public async Task<IActionResult> AddItemToCart(AddItemToCartRequestDto dto)
+    public async Task<ActionResult<AddItemToCartResponseDto>> AddItemToCart([FromBody] AddItemToCartRequestDto dto)
     {
         if (GetUserIdFromClaims(out var userId, out var actionResult)) return actionResult;
 

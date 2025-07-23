@@ -37,13 +37,7 @@ public class RedisCartRepository : ICartRepository
             throw new DuplicateNameException("Product already exists");
         }
 
-        item = new CartItem()
-               {
-                   ProductId = productId,
-                   Quantity = quantity,
-               };
-        var context = new ValidationContext(item);
-        Validator.ValidateObject(item, context, true);
+        item = new CartItem(productId, quantity);
         cart.Items.Add(item);
         
         await SaveAsync(cart);
@@ -68,8 +62,6 @@ public class RedisCartRepository : ICartRepository
         var item = cart.Items.FirstOrDefault(item => item.ProductId == productId);
         if (item == null) return;
         item.Quantity = newQuantity;
-        var context = new ValidationContext(item);
-        Validator.ValidateObject(item, context, true);
         await SaveAsync(cart);
     }
 
