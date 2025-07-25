@@ -3,9 +3,11 @@ This is an educational project focused on learning microservices and clean archi
 
 
 ## Getting Started
-You can easily clone this repository and change the "appsettings.development.json" variables of every directory to connect services to their container names specified in the main directory's "docker-compose.yml".
-Otherwise, just open the solution and run each project. You can change variables on "appsettings.json" and change the environment of each service in "docker-compose.yml" to "Production" to be able to test 
-your APIs locally and effortlessly deploy them as a docker-compose package.
+Just clone the reposritory and start the services and use the E-Commerce postman collection. If you want to run the project using Docker, run the following command in the main directory of the project:
+```markdown
+  docker compose up --build
+```
+Then, using the E-Commerce postman collection, you can start testing the APIs. Keep it mind that for easier usage of the collections, you have to import Docker or Local environments accordingly.
 
 ## Project Structure
 ### User Service
