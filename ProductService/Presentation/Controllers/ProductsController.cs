@@ -79,7 +79,6 @@ public class ProductsController : ControllerBase
     public async Task<IActionResult> GetAllProducts([FromQuery, Range(1, int.MaxValue)] int page = 1, 
                                                     [FromQuery(Name = "page_size"), Range(1, int.MaxValue)] int pageSize = 10)
     {
-        // TODO: NOT WORKING WHEN USED IN DOCKER. NGINX IS PROBABLY THE PROBLEM
         var query = new GetProductsPaginatedQuery(page, pageSize);
         var result = await _mediator.Send(query);
 
