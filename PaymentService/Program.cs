@@ -4,6 +4,7 @@ using PaymentService.Application.Interfaces;
 using PaymentService.Domain.Interfaces;
 using PaymentService.Infrastructure.Messaging;
 using PaymentService.Infrastructure.PaymentProcessing;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +18,10 @@ builder.Services.AddMediatR(config =>
                             {
                                 config.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());
                             });
+builder.Host.UseSerilog((hostingContext, loggerConfiguration) =>
+                        {
+                            loggerConfiguration.ReadFrom.Configuration(hostingContext.Configuration);
+                        });
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IPaymentProcessor, FakePaymentProcessor>();

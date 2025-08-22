@@ -11,6 +11,7 @@ using OrderService.Infrastructure;
 using OrderService.Infrastructure.Messaging;
 using OrderService.Infrastructure.Repositories;
 using OrderService.Infrastructure.ServiceClients;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -41,6 +42,10 @@ builder.Services.AddHttpClient<ICartClient, HttpCartClient>(client =>
                                                             {
                                                                 client.BaseAddress = new Uri(builder.Configuration["Services:CartService"]);
                                                             });
+builder.Host.UseSerilog((hostingContext, loggerConfiguration) =>
+                        {
+                            loggerConfiguration.ReadFrom.Configuration(hostingContext.Configuration);
+                        });
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
                                {
