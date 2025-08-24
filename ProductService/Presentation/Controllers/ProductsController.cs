@@ -32,6 +32,7 @@ public class ProductsController : ControllerBase
         return Ok("Products Healthy");
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpPut("add")]
     public async Task<ActionResult<AddProductResponseDto>> AddProduct([FromBody] AddProductRequestDto dto)
     {
@@ -46,6 +47,7 @@ public class ProductsController : ControllerBase
         return BadRequest(result.ErrorMessage);
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpPatch("update")]
     public async Task<ActionResult<UpdateProductResponseDto>> UpdateProduct([FromBody] UpdateProductRequestDto dto)
     {
@@ -62,6 +64,7 @@ public class ProductsController : ControllerBase
         return BadRequest(result.ErrorMessage);
     }
 
+    [Authorize(Roles = "Admin")]
     [HttpDelete("delete")]
     public async Task<IActionResult> DeleteProduct([FromBody] DeleteProductRequestDto dto)
     {
