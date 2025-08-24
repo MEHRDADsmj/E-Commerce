@@ -1,4 +1,5 @@
 using System.Reflection;
+using System.Security.Claims;
 using System.Text;
 using System.Text.Json;
 using CartService.Domain.Interfaces;
@@ -44,6 +45,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
                                             IssuerSigningKey =
                                                 new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Key"])),
                                             ClockSkew = TimeSpan.Zero,
+                                            RoleClaimType = ClaimTypes.Role,
                                         };
 });
 builder.Services.AddAuthorization();

@@ -15,7 +15,7 @@ public class JwtTokenGeneratorTests
     public async Task GenerateToken_GeneratesValidToken()
     {
         var key = "alskfjlaskf9w8r8ewr987asldkfjauweoriuoweiru";
-        var token = await _jwtTokenGenerator.GenerateToken(key, Guid.NewGuid());
+        var token = await _jwtTokenGenerator.GenerateToken(key, Guid.NewGuid(), "User");
         Assert.True(await _jwtTokenGenerator.ValidateToken(token, key));
     }
 }

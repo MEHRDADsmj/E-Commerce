@@ -35,7 +35,7 @@ public class LoginUserHandler : IRequestHandler<LoginUserCommand, Result<LoginUs
         }
 
         var result = new LoginUserResult(user.Id, user.Email,
-                                         await _tokenGenerator.GenerateToken(_configuration["Jwt:Key"], user.Id));
+                                         await _tokenGenerator.GenerateToken(_configuration["Jwt:Key"], user.Id, user.Role));
         return Result<LoginUserResult>.Success(result);
     }
 }

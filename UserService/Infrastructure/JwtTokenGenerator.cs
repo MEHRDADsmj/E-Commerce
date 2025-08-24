@@ -8,7 +8,7 @@ namespace UserService.Infrastructure;
 
 public class JwtTokenGenerator : ITokenGenerator
 {
-    public async Task<string> GenerateToken(string key, Guid userId)
+    public async Task<string> GenerateToken(string key, Guid userId, string role)
     {
         await Task.CompletedTask;
         SecurityKey securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key));
@@ -18,6 +18,7 @@ public class JwtTokenGenerator : ITokenGenerator
                      {
                          new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                          new Claim("user_id", userId.ToString()),
+                         new Claim(ClaimTypes.Role, role),
                      };
 
         SecurityTokenDescriptor descriptor = new SecurityTokenDescriptor()

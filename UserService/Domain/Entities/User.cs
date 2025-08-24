@@ -9,6 +9,7 @@ public class User
     [Required, StringLength(1024)] public string HashedPassword { get; private set; }
     [StringLength(50)] public string FullName { get; private set; }
     public DateTime CreatedAt { get; private set; }
+    [Required, StringLength(16)] public string Role { get; private set; } = "User";
     
     public bool IsEmpty() => Id == Guid.Empty;
 

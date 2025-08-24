@@ -1,4 +1,5 @@
 using System.Reflection;
+using System.Security.Claims;
 using System.Text;
 using System.Text.Json;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -85,7 +86,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
                                                                                                     IssuerSigningKey =
                                                                                                         new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Key"])),
                                                                                                     ValidIssuer = "Mehrdad",
-                                                                                                    ClockSkew = TimeSpan.Zero
+                                                                                                    ClockSkew = TimeSpan.Zero,
+                                                                                                    RoleClaimType = ClaimTypes.Role,
                                                                                                 };
                                                                                         });
 builder.Services.AddAuthorization();
